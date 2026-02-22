@@ -1,0 +1,26 @@
+[model]
+api_base = "https://openrouter.ai/api/v1"
+api_key = "sk-or-your-api-key"
+model = "google/gemini-2.5-flash-lite"
+timeout = 300
+
+# OpenRouter provider 路由（可选）
+# 只允许指定供应商（例如只走 Azure）:
+# provider_only = ["azure"]
+# 配合 only 时建议禁用 fallback，避免路由到未指定 provider：
+# provider_allow_fallbacks = false
+# 可选：显式 provider 顺序
+# provider_order = ["azure"]
+# 排除某些供应商:
+# provider_ignore = ["anthropic"]
+# 仅路由到支持请求参数的 provider
+# provider_require_parameters = true
+# provider 数据策略：allow / deny
+# provider_data_collection = "deny"
+# 仅使用 ZDR 端点
+# provider_zdr = true
+# 路由排序：price / throughput / latency
+# provider_sort = "throughput"
+
+[processing]
+chunk_size = 60000

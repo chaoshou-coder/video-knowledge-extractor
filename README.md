@@ -8,6 +8,8 @@
 
 [English Documentation](./README_EN.md)
 
+最小可投产使用说明（ASAP）：[`MINIMAL_PROD_GUIDE.md`](./MINIMAL_PROD_GUIDE.md)
+
 ---
 
 ## 目录

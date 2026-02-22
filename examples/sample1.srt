@@ -1,0 +1,3516 @@
+1
+00:00:00,000 --> 00:00:03,240
+Hello, I'm Andrew Main, and this is the OpenAI podcast.
+
+2
+00:00:03,900 --> 00:00:06,940
+Today, our guests are Sarah Fryer, CFO of OpenAI,
+
+3
+00:00:07,220 --> 00:00:10,640
+and legendary investor Vinod Khosla of Khosla Ventures.
+
+4
+00:00:11,020 --> 00:00:14,560
+In this discussion, we're going to talk about the state of the AI ecosystem,
+
+5
+00:00:15,140 --> 00:00:16,460
+whether or not we're in a bubble,
+
+6
+00:00:16,720 --> 00:00:20,680
+and how startups and investors can succeed as AI progresses.
+
+7
+00:00:21,680 --> 00:00:25,040
+Unlike something like Netflix, where they're running so many hours in a day,
+
+8
+00:00:25,100 --> 00:00:27,560
+I think of it much more like infrastructure, like electricity.
+
+9
+00:00:27,560 --> 00:00:33,920
+Demand is limited, not by anything other than availability of compute today.
+
+10
+00:00:34,060 --> 00:00:37,640
+I think the conversation we need to have is, what will people do?
+
+11
+00:00:40,830 --> 00:00:44,310
+2025 was about agents and vibe coding.
+
+12
+00:00:44,510 --> 00:00:45,830
+Now it's 2026.
+
+13
+00:00:46,030 --> 00:00:47,410
+What's the story of 2026?
+
+14
+00:00:48,010 --> 00:00:51,770
+I think we matured in vibe coding in 2025.
+
+15
+00:00:52,390 --> 00:00:54,270
+I don't think we've matured in agents.
+
+16
+00:00:54,890 --> 00:00:58,150
+So agents, especially multi-agentic systems,
+
+17
+00:00:58,150 --> 00:00:59,950
+will mature to the point...
+
+18
+00:01:00,090 --> 00:01:02,550
+to the point of having real visible impact.
+
+19
+00:01:03,070 --> 00:01:04,510
+Whether you're in enterprise,
+
+20
+00:01:05,070 --> 00:01:09,070
+and you have multi-agent systems doing full tasks,
+
+21
+00:01:09,450 --> 00:01:11,830
+like running an ERP system for you,
+
+22
+00:01:13,390 --> 00:01:16,330
+doing all the reconciliation every day,
+
+23
+00:01:16,470 --> 00:01:17,690
+accruals every day,
+
+24
+00:01:18,050 --> 00:01:20,490
+tracking contracts every day.
+
+25
+00:01:20,870 --> 00:01:24,090
+I think that on the enterprise side.
+
+26
+00:01:24,590 --> 00:01:28,270
+But today, on the consumer side,
+
+27
+00:01:28,670 --> 00:01:29,910
+it's still a hassle,
+
+28
+00:01:30,090 --> 00:01:31,350
+to plan a trip.
+
+29
+00:01:31,950 --> 00:01:36,070
+That's a multi-agentic thing that looks across a lot of different things,
+
+30
+00:01:36,150 --> 00:01:37,730
+from your food preferences,
+
+31
+00:01:37,810 --> 00:01:39,430
+to the restaurant preservation,
+
+32
+00:01:39,510 --> 00:01:41,390
+to airline schedules,
+
+33
+00:01:41,470 --> 00:01:43,150
+to your personal calendar.
+
+34
+00:01:44,070 --> 00:01:46,070
+Those will start to mature,
+
+35
+00:01:46,150 --> 00:01:47,570
+I think, a year from now.
+
+36
+00:01:49,350 --> 00:01:51,150
+So I'm pretty excited about that.
+
+37
+00:01:51,230 --> 00:01:54,490
+I think models in robotics and real-world models
+
+38
+00:01:54,690 --> 00:01:56,870
+that go well beyond robotics,
+
+39
+00:01:57,150 --> 00:01:59,290
+like general intuition,
+
+40
+00:02:00,090 --> 00:02:03,890
+will all start to happen in the next year.
+
+41
+00:02:03,970 --> 00:02:06,930
+So I think that those are areas to look for.
+
+42
+00:02:07,010 --> 00:02:08,470
+There's usual functions,
+
+43
+00:02:08,730 --> 00:02:11,130
+like memory in LLMs,
+
+44
+00:02:12,590 --> 00:02:14,690
+continual learning in LLMs,
+
+45
+00:02:16,870 --> 00:02:20,450
+reduction of the impact of hallucinations.
+
+46
+00:02:20,530 --> 00:02:22,770
+Those are all areas I could go on.
+
+47
+00:02:22,850 --> 00:02:27,330
+There's half a dozen areas in which AI doesn't do as well today
+
+48
+00:02:27,410 --> 00:02:29,710
+that will start to be addressed.
+
+49
+00:02:29,710 --> 00:02:30,710
+Yeah.
+
+50
+00:02:30,790 --> 00:02:32,010
+And I think at its baseline,
+
+51
+00:02:32,090 --> 00:02:37,090
+what Vinod is saying is 26 is the beginning of closing this capability gap.
+
+52
+00:02:37,170 --> 00:02:41,590
+So what we know is we've handed people massive intelligence.
+
+53
+00:02:41,670 --> 00:02:44,310
+We've handed them the keys to the Ferrari,
+
+54
+00:02:44,390 --> 00:02:48,190
+but they are only learning how to take it out on the road for the first time.
+
+55
+00:02:48,270 --> 00:02:54,870
+We need to give consumers more and more easy ways to go from
+
+56
+00:02:54,950 --> 00:02:57,950
+chat GPT is just a chat bot call and response.
+
+57
+00:02:58,030 --> 00:02:59,530
+Most people use it today.
+
+58
+00:02:59,530 --> 00:03:01,150
+Just to ask questions.
+
+59
+00:03:01,230 --> 00:03:08,170
+But how do we take it towards being a true task worker that books that trip for them
+
+60
+00:03:08,250 --> 00:03:13,170
+or helps them get a second opinion on what they just heard from their doctor
+
+61
+00:03:13,250 --> 00:03:17,970
+or enables them to create a menu for their diabetic child?
+
+62
+00:03:18,050 --> 00:03:26,190
+How do we help them really move from simple questions into actual outcomes that make my life better?
+
+63
+00:03:26,270 --> 00:03:27,770
+And then on the enterprise side,
+
+64
+00:03:27,850 --> 00:03:29,510
+it's that same continuum.
+
+65
+00:03:29,610 --> 00:03:31,650
+How do we close the capability gap?
+
+66
+00:03:31,730 --> 00:03:34,530
+One of the things we know from our state of the enterprise,
+
+67
+00:03:34,610 --> 00:03:39,370
+AI and the enterprise report that our chief economists put out at the end of last year
+
+68
+00:03:39,450 --> 00:03:43,210
+is on the frontier versus just even the median corporation.
+
+69
+00:03:43,290 --> 00:03:47,790
+The average number of messages or the median is about six acts,
+
+70
+00:03:47,890 --> 00:03:52,930
+which will tell you that six acts the usage from a company that's already on the frontier.
+
+71
+00:03:53,010 --> 00:03:56,470
+And we know that frontier isn't even pushed to its max.
+
+72
+00:03:56,550 --> 00:03:59,230
+So for us, it's this focus of how do we help
+
+73
+00:03:59,270 --> 00:04:04,110
+consumers move along that continuum to true agentic task working?
+
+74
+00:04:04,190 --> 00:04:08,330
+And then for enterprises, how do we create a much more sophisticated,
+
+75
+00:04:08,410 --> 00:04:15,410
+vertically specialized outcome for enterprises that allows them to go from maybe a very simple
+
+76
+00:04:15,490 --> 00:04:21,630
+chat GPT implementation the whole way to something that's transforming the most important part of their business?
+
+77
+00:04:21,710 --> 00:04:25,130
+For a health care provider, it might be their drug discovery process.
+
+78
+00:04:25,210 --> 00:04:28,390
+For a hospital, it might be the time to admit a patient to get that patient back in the hospital.
+
+79
+00:04:28,470 --> 00:04:29,210
+It might be the time to admit a patient to get that patient back in the hospital.
+
+80
+00:04:29,290 --> 00:04:30,530
+It might be the time to admit a patient to get that patient back into the community.
+
+81
+00:04:30,610 --> 00:04:39,610
+For a really large retailer, it might be just larger basket sizes, higher conversion rates, and much happier customers.
+
+82
+00:04:39,690 --> 00:04:43,030
+So it's the basics of closing that capability gap.
+
+83
+00:04:43,110 --> 00:04:45,450
+So I might add one other perspective.
+
+84
+00:04:45,530 --> 00:04:51,630
+We've talked about the number of areas in which the technology will advance and capability will advance.
+
+85
+00:04:51,710 --> 00:04:58,350
+I would venture to guess today, of the people using AI, whether it's personal or enterprise,
+
+86
+00:04:58,430 --> 00:04:59,210
+I would venture to guess today, of the people using AI, whether it's personal or enterprise,
+
+87
+00:04:59,290 --> 00:05:05,690
+some single-digit percentage are even using 30% of the capability of the AI.
+
+88
+00:05:05,770 --> 00:05:15,010
+So this percentage of people who are using 30% or 50%, let alone 80% of the AI's capabilities, will keep increasing.
+
+89
+00:05:15,090 --> 00:05:19,670
+I think that's a 10-year journey before people learn to use AI.
+
+90
+00:05:19,750 --> 00:05:20,870
+I've seen this.
+
+91
+00:05:20,950 --> 00:05:25,610
+Some people, kind of pundits, confuse adoption curves for capability curves.
+
+92
+00:05:25,690 --> 00:05:27,250
+And that's come up where you've seen people-
+
+93
+00:05:27,330 --> 00:05:28,350
+So that's the point I'm making.
+
+94
+00:05:28,350 --> 00:05:29,650
+And it's a force multiplier.
+
+95
+00:05:29,810 --> 00:05:35,570
+Because today we have over 800 million using ChatGPT today, 800 million consumers weekly using.
+
+96
+00:05:36,050 --> 00:05:38,330
+But that number should be in the billions.
+
+97
+00:05:39,330 --> 00:05:42,230
+And then what percentage use are they using it for?
+
+98
+00:05:42,670 --> 00:05:45,090
+It's like we've just turned electricity on in the home.
+
+99
+00:05:45,210 --> 00:05:47,230
+We've wired up the home and they've turned on the lights.
+
+100
+00:05:47,450 --> 00:05:50,490
+But they have no idea that they could now heat their home.
+
+101
+00:05:50,490 --> 00:05:51,170
+They could cook.
+
+102
+00:05:51,290 --> 00:05:52,410
+They could curl their hair.
+
+103
+00:05:52,590 --> 00:05:54,610
+There's so many things you now can do.
+
+104
+00:05:54,890 --> 00:05:58,170
+An analogy I've used is that email didn't really get much better.
+
+105
+00:05:58,170 --> 00:05:59,930
+Between 1990 and the year 2000.
+
+106
+00:06:00,010 --> 00:06:00,830
+Neither did mobile.
+
+107
+00:06:00,910 --> 00:06:02,010
+But usage went way up.
+
+108
+00:06:02,070 --> 00:06:04,130
+And the problem wasn't like, well, we need better email.
+
+109
+00:06:04,190 --> 00:06:04,970
+We need more better mobile.
+
+110
+00:06:05,050 --> 00:06:07,730
+It's like people just need to learn all the things they could use it for.
+
+111
+00:06:07,830 --> 00:06:08,330
+Right.
+
+112
+00:06:08,510 --> 00:06:09,010
+Yeah.
+
+113
+00:06:09,090 --> 00:06:10,310
+And in a more sophisticated way.
+
+114
+00:06:10,390 --> 00:06:12,170
+Like mobile is always one that's interesting to me.
+
+115
+00:06:12,250 --> 00:06:16,410
+Because when mobile took off, people just took their desktop websites and turned them into mobile.
+
+116
+00:06:16,490 --> 00:06:17,690
+And they were really hard to scroll.
+
+117
+00:06:17,770 --> 00:06:19,650
+But I guess you at least had them in your pocket.
+
+118
+00:06:19,950 --> 00:06:22,270
+But then you realized you had a GPS.
+
+119
+00:06:22,430 --> 00:06:23,550
+So now you could have Uber.
+
+120
+00:06:23,690 --> 00:06:25,170
+And now you could do things with location.
+
+121
+00:06:25,470 --> 00:06:27,750
+Or you had a camera at your fingertips.
+
+122
+00:06:27,830 --> 00:06:28,050
+Okay.
+
+123
+00:06:28,170 --> 00:06:30,410
+So now, yeah, I can take photographs of all my friends.
+
+124
+00:06:30,410 --> 00:06:34,770
+But I can also snap a check and deposit it into my bank account.
+
+125
+00:06:34,770 --> 00:06:36,710
+Although we should fix the whole paper check thing.
+
+126
+00:06:36,810 --> 00:06:37,870
+But that's an aside.
+
+127
+00:06:37,870 --> 00:06:40,670
+It still seems like I can just take a photo of this.
+
+128
+00:06:40,930 --> 00:06:42,230
+And now I get money in my bank account.
+
+129
+00:06:42,730 --> 00:06:48,350
+But, you know, that all existed in the minute mobile was available to us.
+
+130
+00:06:48,470 --> 00:06:53,030
+But just the ability for human ingenuity to come to work on it.
+
+131
+00:06:53,050 --> 00:06:53,850
+So I think you're right.
+
+132
+00:06:53,950 --> 00:06:58,150
+I don't even know if we need more intelligence than we have today to vastly increase.
+
+133
+00:06:58,170 --> 00:06:58,750
+Outcomes.
+
+134
+00:06:59,030 --> 00:07:02,430
+But, of course, the models are going to keep getting more intelligent as well.
+
+135
+00:07:02,790 --> 00:07:03,570
+You mentioned health.
+
+136
+00:07:03,670 --> 00:07:08,750
+And that's one of the really kind of high stakes things we think about when it comes to just probably the most important thing.
+
+137
+00:07:08,970 --> 00:07:14,950
+And it's kind of fascinating to think about that just, you know, a few years ago, we got ChatGPT.
+
+138
+00:07:15,090 --> 00:07:16,870
+And we're using it for very simple applications.
+
+139
+00:07:16,870 --> 00:07:18,810
+And now we're trusting with HIPAA compliant data.
+
+140
+00:07:19,390 --> 00:07:23,330
+Do you look at that as sort of a marker of how fast or how well things have been accelerating?
+
+141
+00:07:23,330 --> 00:07:26,810
+Are there other ones like that you think about to say, okay, now we know we're at some new level?
+
+142
+00:07:27,310 --> 00:07:28,090
+Health is clearly.
+
+143
+00:07:28,170 --> 00:07:40,790
+One of those areas I've long believed revolutionized health by making expertise be a commodity in all areas of health.
+
+144
+00:07:41,670 --> 00:07:46,360
+The problem with health is regulatory.
+
+145
+00:07:47,500 --> 00:07:51,460
+So first, there's constraints on what AI can do.
+
+146
+00:07:51,840 --> 00:07:58,000
+And AI can't legally write a prescription, even if it's better than human beings.
+
+147
+00:07:58,140 --> 00:07:58,440
+Right.
+
+148
+00:07:58,440 --> 00:07:59,080
+So there's constraints on what AI can do.
+
+149
+00:07:59,080 --> 00:07:59,360
+And AI can't legally write a prescription.
+
+150
+00:08:00,780 --> 00:08:11,380
+That is not only the FDA, but it's actually beyond the FDA into the American Medical Association institutionally controls that function.
+
+151
+00:08:11,380 --> 00:08:15,380
+So there will be incumbent resistance in a lot of areas.
+
+152
+00:08:15,840 --> 00:08:17,760
+I think we can talk about it if you like.
+
+153
+00:08:19,100 --> 00:08:25,930
+But diagnosing is still a constraint because the FDA controls that.
+
+154
+00:08:26,190 --> 00:08:28,830
+There's no AI approved as a.
+
+155
+00:08:28,890 --> 00:08:30,170
+Medical device yet.
+
+156
+00:08:30,490 --> 00:08:31,450
+So that all.
+
+157
+00:08:32,150 --> 00:08:39,410
+Fortunately, this administration is doing a very good job of moving quickly and taking the appropriate level of risk.
+
+158
+00:08:39,410 --> 00:08:43,050
+So I'm pretty pleased to see what's happening there.
+
+159
+00:08:43,730 --> 00:08:50,750
+On the health front, we see in our data 230 million people every week ask CHAT-GPT a health question.
+
+160
+00:08:51,830 --> 00:08:57,510
+Sixty six percent of U.S. physicians say they use CHAT-GPT in their daily work.
+
+161
+00:08:57,970 --> 00:08:58,530
+I'll tell you that.
+
+162
+00:08:58,530 --> 00:08:59,290
+I'm not going to lie.
+
+163
+00:08:59,290 --> 00:08:59,810
+I'm not going to lie.
+
+164
+00:08:59,810 --> 00:08:59,870
+I'm not going to lie.
+
+165
+00:08:59,870 --> 00:08:59,930
+I'm not going to lie.
+
+166
+00:08:59,930 --> 00:08:59,950
+I'm not going to lie.
+
+167
+00:08:59,950 --> 00:09:02,490
+My brother is an HDU doctor in the UK.
+
+168
+00:09:02,830 --> 00:09:04,870
+So his job is you hit the ER.
+
+169
+00:09:05,310 --> 00:09:06,630
+They don't know how to triage you.
+
+170
+00:09:06,690 --> 00:09:07,650
+So they send you to him.
+
+171
+00:09:07,770 --> 00:09:09,370
+You kind of don't want to show up to him.
+
+172
+00:09:09,870 --> 00:09:11,050
+He's expected to have.
+
+173
+00:09:11,070 --> 00:09:11,650
+He's very good, though.
+
+174
+00:09:11,670 --> 00:09:12,850
+He's very good at what he does.
+
+175
+00:09:12,850 --> 00:09:14,230
+But it means you're not in good shape.
+
+176
+00:09:14,570 --> 00:09:19,710
+But he's expect to have an almost an encyclopedic knowledge of every disease that ever existed.
+
+177
+00:09:19,930 --> 00:09:21,270
+So I always give the example.
+
+178
+00:09:21,390 --> 00:09:22,830
+He works in Aberdeen in Scotland.
+
+179
+00:09:23,370 --> 00:09:25,970
+If you shut up with malaria, he will not think of that.
+
+180
+00:09:26,050 --> 00:09:27,770
+That is not in his pattern recognition.
+
+181
+00:09:27,770 --> 00:09:28,370
+And yet.
+
+182
+00:09:28,530 --> 00:09:29,110
+That could have happened.
+
+183
+00:09:29,230 --> 00:09:29,570
+I don't know.
+
+184
+00:09:29,710 --> 00:09:31,050
+You went on vacation somewhere.
+
+185
+00:09:31,550 --> 00:09:32,490
+You got bitten by a mosquito.
+
+186
+00:09:32,970 --> 00:09:33,190
+Boom.
+
+187
+00:09:33,230 --> 00:09:35,690
+You're showing up in an ER room in Aberdeen.
+
+188
+00:09:36,530 --> 00:09:42,470
+What chat GPT can do or what the model can do is really act as a great augmentation to
+
+189
+00:09:42,470 --> 00:09:46,490
+the doctor, which is why I think 66% of them are using it.
+
+190
+00:09:46,550 --> 00:09:47,770
+And that number is only growing.
+
+191
+00:09:48,030 --> 00:09:48,190
+Right.
+
+192
+00:09:48,270 --> 00:09:51,610
+You know, it's probably already much higher.
+
+193
+00:09:52,050 --> 00:09:56,350
+And so I think it's just a great example of where something like health, we're getting
+
+194
+00:09:56,350 --> 00:09:57,970
+the benefit of our doctors.
+
+195
+00:09:57,970 --> 00:10:03,310
+Being able to have always the latest research in front of them, always the latest known
+
+196
+00:10:03,310 --> 00:10:07,730
+interactions, say, between someone's drug regime and what they're living through and
+
+197
+00:10:07,730 --> 00:10:09,010
+experiencing as individuals.
+
+198
+00:10:09,310 --> 00:10:13,870
+But it also puts some independence back into consumers hands.
+
+199
+00:10:14,410 --> 00:10:20,370
+So now I get the opportunity to ahead of time, do some research on what my symptoms might
+
+200
+00:10:20,370 --> 00:10:20,790
+be saying.
+
+201
+00:10:20,810 --> 00:10:23,850
+So I can have a much more educated conversation with my doctor.
+
+202
+00:10:23,850 --> 00:10:27,750
+It allows me to maybe get a second opinion or know that I want to go.
+
+203
+00:10:27,750 --> 00:10:28,990
+Ask for a second opinion.
+
+204
+00:10:29,830 --> 00:10:36,510
+It also, we go very fast to, you know, these extreme places, but just to even things like,
+
+205
+00:10:36,670 --> 00:10:39,010
+hey, I've got 20 minutes a day to exercise.
+
+206
+00:10:39,550 --> 00:10:42,350
+I know I'm suffering from type one diabetes.
+
+207
+00:10:42,670 --> 00:10:44,570
+What what could I do in 20 minutes?
+
+208
+00:10:44,570 --> 00:10:49,510
+Or my daughter has an interesting issue with the food she eats.
+
+209
+00:10:49,970 --> 00:10:54,490
+And so it used to be a super just frustrating thing to go to a restaurant even because we'd
+
+210
+00:10:54,490 --> 00:10:56,950
+have to almost ask the server.
+
+211
+00:10:56,950 --> 00:10:58,210
+So many questions.
+
+212
+00:10:58,210 --> 00:10:59,950
+And now we can photograph a menu.
+
+213
+00:11:00,410 --> 00:11:04,210
+Chat suggests what are likely the best dishes for her to order.
+
+214
+00:11:04,550 --> 00:11:09,170
+And then we can have a bit more of a of a terser conversation, but a bit more productive on
+
+215
+00:11:09,170 --> 00:11:10,010
+what's going to work.
+
+216
+00:11:10,010 --> 00:11:15,850
+And it has just changed how we think about just eating takes it away from all about the food to
+
+217
+00:11:16,090 --> 00:11:17,830
+why we're going out for dinner together.
+
+218
+00:11:18,090 --> 00:11:21,790
+And so I think they are all these just examples of something like health.
+
+219
+00:11:22,070 --> 00:11:26,450
+It's already happening and it's going to keep getting better and better.
+
+220
+00:11:26,450 --> 00:11:26,950
+And then.
+
+221
+00:11:27,150 --> 00:11:30,750
+And to the point, I think regulatory environment is going to have to catch up.
+
+222
+00:11:30,950 --> 00:11:39,170
+It's no matter what kind of system you're under, the cost of medical care is exceeding the GDP of every country, the rate at which increases.
+
+223
+00:11:39,510 --> 00:11:40,950
+And it seems like we needed AI.
+
+224
+00:11:40,950 --> 00:11:41,890
+We needed it now.
+
+225
+00:11:41,890 --> 00:11:43,630
+And, you know, it can be helpful.
+
+226
+00:11:43,630 --> 00:11:48,310
+And as you pointed out, it's the first time the cost of medical intelligence has dropped year over year.
+
+227
+00:11:48,850 --> 00:11:51,430
+But that comes with a lot of demand for compute.
+
+228
+00:11:51,430 --> 00:11:54,570
+And we have a lot more questions that we want to have answered.
+
+229
+00:11:54,950 --> 00:11:56,950
+And certainly people can see the need.
+
+230
+00:11:56,950 --> 00:11:58,950
+We need for more compute.
+
+231
+00:11:59,250 --> 00:12:05,130
+But the scale and scope at which OpenAI is investing in compute is incredibly huge.
+
+232
+00:12:05,170 --> 00:12:08,790
+You know, we're talking, you know, numbers that are just really hard to fathom.
+
+233
+00:12:10,050 --> 00:12:12,930
+How does OpenAI determine that need?
+
+234
+00:12:12,930 --> 00:12:16,130
+You know, what are the metrics you're looking at to think that, like, yes, we need to spend this much?
+
+235
+00:12:16,510 --> 00:12:23,350
+So first of all, we are trying to make sure we stay investing in compute to match the pace of our revenue.
+
+236
+00:12:23,650 --> 00:12:26,930
+And we've seen a really strong correlation between.
+
+237
+00:12:26,950 --> 00:12:29,290
+In period compute, in period revenue.
+
+238
+00:12:29,330 --> 00:12:30,130
+I'll give you an example.
+
+239
+00:12:30,130 --> 00:12:38,250
+If you just go back in 23, 24 and 25, our compute was 200 megawatts, 600 megawatts.
+
+240
+00:12:38,250 --> 00:12:40,890
+And we ended last year at two gigawatts.
+
+241
+00:12:41,290 --> 00:12:44,090
+Against that, and it's really easy because the numbers match up.
+
+242
+00:12:44,090 --> 00:12:47,050
+We exited at 23 at 2 billion in ARR.
+
+243
+00:12:47,050 --> 00:12:48,630
+So 200 megawatts, 2 billion.
+
+244
+00:12:49,010 --> 00:12:51,150
+We exited 24 at 6 billion.
+
+245
+00:12:51,150 --> 00:12:53,150
+So 6 billion, 600 megawatts.
+
+246
+00:12:53,430 --> 00:12:56,030
+And we exited last year a little over 20 billion.
+
+247
+00:12:56,030 --> 00:12:56,670
+20 billion.
+
+248
+00:12:56,670 --> 00:12:56,930
+2 billion.
+
+249
+00:12:56,950 --> 00:12:57,790
+2 gigawatts.
+
+250
+00:12:57,790 --> 00:12:59,330
+Actually, it's been accelerating.
+
+251
+00:12:59,910 --> 00:13:05,170
+So that's just even if you look at the slope of the line, it says more compute, more revenue.
+
+252
+00:13:05,630 --> 00:13:17,610
+Now, there is definitely a timing mismatch because I have to make decisions today about making sure we have compute in not even 26 or 27, but 28, 29 and 30.
+
+253
+00:13:17,790 --> 00:13:24,410
+Because if I don't put in orders today and don't give the signal to create data centers, it won't be there.
+
+254
+00:13:24,410 --> 00:13:24,690
+Right.
+
+255
+00:13:24,810 --> 00:13:26,830
+Today, we feel absolutely.
+
+256
+00:13:26,950 --> 00:13:28,250
+Constrained on compute.
+
+257
+00:13:28,250 --> 00:13:37,710
+There are many more products that we could launch, many more models that we would train, many more multimodality things we would explore if we had more compute today.
+
+258
+00:13:37,950 --> 00:13:47,170
+So, for example, even in the last year, I think the overall hardware investments globally has gone up by something like 220 billion dollars.
+
+259
+00:13:47,390 --> 00:13:49,770
+That's just how much actual spending has gone up.
+
+260
+00:13:50,090 --> 00:13:56,790
+If you look at chips, chip forecasts have gone up similarly about 334 billion dollars.
+
+261
+00:13:56,950 --> 00:13:58,950
+So it's not just open AI.
+
+262
+00:13:58,950 --> 00:14:02,950
+The signal from the whole environment is AI is real.
+
+263
+00:14:02,950 --> 00:14:04,950
+We are in a paradigm shift.
+
+264
+00:14:04,950 --> 00:14:11,950
+We need to invest to give people the intelligence they need to do all the things we just talked about, for example.
+
+265
+00:14:11,950 --> 00:14:22,950
+So back inside of open AI, we do spend a lot of time going very deep on what is our demand signal in consumer, in enterprise, in developers.
+
+266
+00:14:22,950 --> 00:14:26,950
+We think about what's the mosaic first at the base.
+
+267
+00:14:26,950 --> 00:14:30,950
+Like on an infrastructure layer, how do we create max optionality?
+
+268
+00:14:30,950 --> 00:14:33,950
+So we want to be multi-cloud, multi-chip.
+
+269
+00:14:33,950 --> 00:14:38,950
+And that gives us an interesting layer at the infrastructure layer.
+
+270
+00:14:38,950 --> 00:14:40,950
+One tick up at the product layer.
+
+271
+00:14:40,950 --> 00:14:43,950
+We also want to become more multidimensional.
+
+272
+00:14:43,950 --> 00:14:46,950
+So we used to just be one product, ChatGPT.
+
+273
+00:14:46,950 --> 00:14:52,950
+Today, we are ChatGPT for consumer with all of the blades inside it, healthcare and so on.
+
+274
+00:14:52,950 --> 00:14:53,950
+ChatGPT for work.
+
+275
+00:14:53,950 --> 00:14:56,950
+But we also have Sora as a new platform.
+
+276
+00:14:56,950 --> 00:15:00,950
+We have some of our transformational research projects.
+
+277
+00:15:00,950 --> 00:15:02,950
+One tick up.
+
+278
+00:15:02,950 --> 00:15:09,950
+We also then have a business model ecosystem that's becoming much more multidimensional.
+
+279
+00:15:09,950 --> 00:15:14,950
+Began with a single subscription because we've launched ChatGPT and we needed a way to pay for the compute.
+
+280
+00:15:14,950 --> 00:15:16,950
+We now have multiple price points.
+
+281
+00:15:16,950 --> 00:15:18,950
+First ChatGPT subscriber, by the way.
+
+282
+00:15:18,950 --> 00:15:20,950
+I love you for that.
+
+283
+00:15:20,950 --> 00:15:21,950
+Multiple subscriptions.
+
+284
+00:15:21,950 --> 00:15:24,950
+We went to the enterprise and had SaaS-based pricing.
+
+285
+00:15:24,950 --> 00:15:26,950
+We have credit-based pricing now.
+
+286
+00:15:26,950 --> 00:15:29,950
+We're now for places where high value is being found.
+
+287
+00:15:29,950 --> 00:15:32,950
+People want to pay more to get more.
+
+288
+00:15:32,950 --> 00:15:35,950
+We're beginning to think about things like commerce and ads.
+
+289
+00:15:35,950 --> 00:15:43,950
+And then, of course, longer term, I like models like, for example, would we do licensing models to really align.
+
+290
+00:15:43,950 --> 00:15:48,950
+Let's say in drug discovery, if we licensed our technology, you have a breakthrough.
+
+291
+00:15:48,950 --> 00:15:53,950
+That drug takes off and we get a licensed portion of all its sales.
+
+292
+00:15:53,950 --> 00:15:56,950
+It's great alignment for us with our customer.
+
+293
+00:15:56,950 --> 00:16:01,950
+If you think about those three tiers, I actually think of it like a Rubik's Cube.
+
+294
+00:16:01,950 --> 00:16:12,950
+We went from a single block, one CSP, Microsoft, one chip, one product, one business model, to now a whole three-dimensional cube.
+
+295
+00:16:12,950 --> 00:16:20,950
+One of the things I love about a Rubik's Cube, I'm probably not getting the number exactly right, but I think it has 43 quintillion different states it can be in.
+
+296
+00:16:20,950 --> 00:16:23,950
+It always blew my mind when I was in university.
+
+297
+00:16:23,950 --> 00:16:25,950
+Now just think about that cube spinning.
+
+298
+00:16:25,950 --> 00:16:33,950
+So we pick a low latency chip going alongside something like coding that's 5x the pace that people expect.
+
+299
+00:16:33,950 --> 00:16:37,950
+We can charge a high-end subscription for that.
+
+300
+00:16:37,950 --> 00:16:41,950
+So it's almost like you line up the cube and you get three colors on one side.
+
+301
+00:16:41,950 --> 00:16:49,950
+We could spin the cube again and say low latency chip, faster image gen, more free users come in.
+
+302
+00:16:49,950 --> 00:16:53,950
+But that creates more inventory for ultimately perhaps an ads platform.
+
+303
+00:16:53,950 --> 00:16:54,950
+So you can start to see how.
+
+304
+00:16:54,950 --> 00:17:07,950
+The goal in the last 12 months has been creating more and more strategic options that allow me to keep paying for the compute we need to really achieve our mission, AGI for the benefit of humanity.
+
+305
+00:17:07,950 --> 00:17:18,950
+So, you know, the way to simplify that is demand is limited, not by anything other than availability of compute today.
+
+306
+00:17:18,950 --> 00:17:20,950
+Whether it's Sora or more broadly.
+
+307
+00:17:20,950 --> 00:17:23,950
+And then there's price elasticity.
+
+308
+00:17:23,950 --> 00:17:27,950
+Where demand is infinite for compute.
+
+309
+00:17:27,950 --> 00:17:31,950
+So I think that's the way to think about it.
+
+310
+00:17:31,950 --> 00:17:37,950
+It just we haven't even started to exercise the price elasticity lever.
+
+311
+00:17:37,950 --> 00:17:40,950
+It's just we can't fulfill demand.
+
+312
+00:17:40,950 --> 00:17:42,950
+And it's limited by compute.
+
+313
+00:17:42,950 --> 00:17:49,950
+So all the people talking about bubbles and things, I think, are on the wrong track.
+
+314
+00:17:49,950 --> 00:17:52,950
+They have no sense of how large.
+
+315
+00:17:52,950 --> 00:17:56,950
+This changes.
+
+316
+00:17:56,950 --> 00:18:02,950
+And how much more demand elasticity there is a need for API calls.
+
+317
+00:18:02,950 --> 00:18:07,950
+As one of OpenAI's earliest investors, you made a bet early on.
+
+318
+00:18:07,950 --> 00:18:09,950
+You saw where this was headed.
+
+319
+00:18:09,950 --> 00:18:11,950
+But you saw the dot com bubble.
+
+320
+00:18:11,950 --> 00:18:12,950
+You watched what happened there.
+
+321
+00:18:12,950 --> 00:18:14,950
+But you've also seen other things.
+
+322
+00:18:14,950 --> 00:18:15,950
+The mobile revolution.
+
+323
+00:18:15,950 --> 00:18:17,950
+You've seen this happen with other areas.
+
+324
+00:18:17,950 --> 00:18:19,950
+And you mentioned the term broad.
+
+325
+00:18:19,950 --> 00:18:21,950
+And is that sort of where your conviction comes from?
+
+326
+00:18:21,950 --> 00:18:23,950
+Is just how many different areas it touches?
+
+327
+00:18:23,950 --> 00:18:24,950
+Yeah.
+
+328
+00:18:24,950 --> 00:18:27,950
+Look, when we invested, we had one simple metric.
+
+329
+00:18:27,950 --> 00:18:30,950
+There was no projections to look at.
+
+330
+00:18:30,950 --> 00:18:32,950
+No product plans to look at.
+
+331
+00:18:32,950 --> 00:18:34,950
+No chat GPT to look at.
+
+332
+00:18:34,950 --> 00:18:36,950
+It was very simply the idea.
+
+333
+00:18:36,950 --> 00:18:48,950
+If we develop anywhere near close to human intelligence, let alone supersede human intelligence, its impact is going to be huge.
+
+334
+00:18:48,950 --> 00:18:50,950
+So it was this hand-wavy approach.
+
+335
+00:18:50,950 --> 00:18:55,950
+Like the consequences of success are really going to be consequential.
+
+336
+00:18:55,950 --> 00:19:00,430
+So why not try that?
+
+337
+00:19:00,430 --> 00:19:05,720
+People, there's also this funny notion of bubble.
+
+338
+00:19:05,720 --> 00:19:14,720
+People equate bubble to stock prices, which has nothing to do with anything other than fear and greed among investors.
+
+339
+00:19:14,720 --> 00:19:20,720
+So I always look at bubbles should be measured by the number of API calls.
+
+340
+00:19:20,720 --> 00:19:21,720
+Mm-hmm.
+
+341
+00:19:21,720 --> 00:19:27,720
+Or in the dot-com bubble, which people refer to, it should be amount of internet traffic.
+
+342
+00:19:27,720 --> 00:19:28,980
+Mm-hmm.
+
+343
+00:19:28,980 --> 00:19:34,980
+Not by what happened to stock prices because somebody got overexcited or underexcited.
+
+344
+00:19:34,980 --> 00:19:41,980
+And then one day they can go from loving Nvidia to hating Nvidia because it's overvalued.
+
+345
+00:19:41,980 --> 00:19:45,980
+Those gyrations aren't reality.
+
+346
+00:19:45,980 --> 00:19:49,980
+The reality is the underlying number of API calls.
+
+347
+00:19:49,980 --> 00:19:50,980
+Mm-hmm.
+
+348
+00:19:50,980 --> 00:19:57,980
+So the reason why I'm saying that is because there's no real use of AI in internet traffic during the dot-com bubble.
+
+349
+00:19:57,980 --> 00:20:03,980
+Prices may have gone up violently and gone down violently.
+
+350
+00:20:03,980 --> 00:20:09,360
+There's no bubble detected in internet traffic.
+
+351
+00:20:09,360 --> 00:20:15,360
+I would almost guarantee you, you won't see the bubble in number of API calls.
+
+352
+00:20:15,360 --> 00:20:20,360
+And if that's your fundamental metric of what's the real use of your AI, usefulness of AI, demand for AI, then you're not going to see the bubble.
+
+353
+00:20:20,360 --> 00:20:24,360
+You're not going to see a bubble in API calls.
+
+354
+00:20:24,360 --> 00:20:28,360
+What Wall Street tends to do with it, I don't really care.
+
+355
+00:20:28,360 --> 00:20:30,360
+I think it's mostly irrelevant.
+
+356
+00:20:30,360 --> 00:20:35,360
+Great for press articles because press has to fill their column inches.
+
+357
+00:20:35,360 --> 00:20:37,360
+But it's not reality.
+
+358
+00:20:37,360 --> 00:20:40,360
+So prices of things aren't reality.
+
+359
+00:20:40,360 --> 00:20:41,360
+Or stock prices.
+
+360
+00:20:41,360 --> 00:20:42,360
+Mm-hmm.
+
+361
+00:20:42,360 --> 00:20:44,360
+Private company valuation.
+
+362
+00:20:44,360 --> 00:20:49,360
+The reality is what's the actual demand for AI, which is the number of API calls.
+
+363
+00:20:49,360 --> 00:20:51,360
+Right.
+
+364
+00:20:51,360 --> 00:21:08,360
+And I think if I hark back to that moment where you were looking at 1999, the value people were getting from the internet at the time was actually very, it was so young, so nascent that you couldn't really see how it was changing their lives.
+
+365
+00:21:08,360 --> 00:21:12,360
+I do think that with AI, it's happened so fast, that change.
+
+366
+00:21:12,360 --> 00:21:13,360
+It's very real.
+
+367
+00:21:13,360 --> 00:21:17,360
+Like as a CFO, forget about being the CFO of OpenAI, but as a CFO, what I see happening is that the value of AI is changing.
+
+368
+00:21:17,360 --> 00:21:18,360
+Yeah.
+
+369
+00:21:18,360 --> 00:21:19,360
+I think it's a very, very big change.
+
+370
+00:21:19,360 --> 00:21:20,360
+Yeah.
+
+371
+00:21:20,360 --> 00:21:21,360
+What's the difference between the value of AI and CFOs?
+
+372
+00:21:21,360 --> 00:21:22,360
+Yeah.
+
+373
+00:21:22,360 --> 00:21:31,360
+So, for example, what I see happening in my organization is truly taking tasks that previously I would have kept having to add more and more people doing fairly mundane things.
+
+374
+00:21:31,360 --> 00:21:34,360
+Like let's take something like revenue management.
+
+375
+00:21:34,360 --> 00:21:44,360
+So, in a team that does revenue management, one of the things they do every day is they have to download all the contracts that we signed the day before or through the week.
+
+376
+00:21:44,360 --> 00:21:45,360
+And they have to read all of those contracts to make sure there's no error.
+
+377
+00:21:45,360 --> 00:21:46,360
+And I think that's really important.
+
+378
+00:21:46,360 --> 00:21:47,360
+And what's the biggest challenge in that?
+
+379
+00:21:47,360 --> 00:21:52,760
+sure there's no terms sitting in it that are unexpected, that are effectively non-standard
+
+380
+00:21:52,760 --> 00:21:58,400
+terms. Because a non-standard term means that there could be a revenue recognition change that
+
+381
+00:21:58,400 --> 00:22:02,680
+has to happen. And that's a very big deal for a finance team. That's the number one thing you
+
+382
+00:22:02,680 --> 00:22:08,400
+show your auditors come in to audit you on. The pace at which we are growing, right, the number
+
+383
+00:22:08,400 --> 00:22:16,540
+of contracts every day is going up in multiples. So my only choice in a pre-AI world would have
+
+384
+00:22:16,540 --> 00:22:21,420
+been hire more people. And imagine what those people's jobs are like. You come to work every
+
+385
+00:22:21,420 --> 00:22:26,280
+day and you read a contract, and then you read the next one and the next one. It is so mundane
+
+386
+00:22:26,280 --> 00:22:33,660
+and such drudgery. And it's not why people went to school and learned about the accounting field
+
+387
+00:22:33,660 --> 00:22:38,760
+or thought about being a finance professional. But that's kind of the job we hand them as an
+
+388
+00:22:38,760 --> 00:22:45,620
+entry-level job. Today, using our own tools here at OpenAI, I now have overnight, all of those
+
+389
+00:22:45,620 --> 00:22:46,520
+contracts are pulled.
+
+390
+00:22:46,540 --> 00:22:52,120
+They are pulled out of a system. They are put into a tabular database, a Databricks database in our
+
+391
+00:22:52,120 --> 00:22:59,180
+case. The agent or the intelligence is able to go through. It shows me exactly what is non-standard
+
+392
+00:22:59,180 --> 00:23:06,620
+and why. It suggests what, therefore, the rev rec is. But it also suggests the insight, which is,
+
+393
+00:23:07,080 --> 00:23:10,720
+you know, should this term even be here? Did the salesperson just give away something they
+
+394
+00:23:10,720 --> 00:23:16,360
+shouldn't have? In which case, you know, I go and I coach them. Is it actually telling me
+
+395
+00:23:16,540 --> 00:23:21,300
+about my business? It's starting to shift, in which case this non-standard term actually should
+
+396
+00:23:21,300 --> 00:23:26,840
+become a standard term. And I'm actually, what I'm experiencing is a shift in my business model,
+
+397
+00:23:26,840 --> 00:23:34,340
+which might actually be a good thing. Or perhaps I want to find a different way to help get the
+
+398
+00:23:34,340 --> 00:23:39,520
+customer what they're looking for, the salesperson what they're looking for, but maintain my revenue
+
+399
+00:23:39,520 --> 00:23:45,700
+recognition, my current business model, right? So I know my more junior entry-level people are over
+
+400
+00:23:45,700 --> 00:23:46,500
+on the right.
+
+401
+00:23:46,540 --> 00:23:52,940
+Of that discussion. And they're kind of refinding the job they loved. That to me is why it's not a
+
+402
+00:23:52,940 --> 00:23:59,780
+bubble, because the value is real and tangible. It also means I probably can have a smaller team.
+
+403
+00:23:59,960 --> 00:24:05,440
+I can have a much more high-performing team, a much higher morale on my team, better retention
+
+404
+00:24:05,440 --> 00:24:10,780
+rates, right? All of these I can put into like numbers to say my business is now healthier.
+
+405
+00:24:11,240 --> 00:24:15,700
+And I think that's the piece when the press is trying to lead with the bubble conversation or
+
+406
+00:24:15,700 --> 00:24:15,940
+whatever.
+
+407
+00:24:16,540 --> 00:24:21,900
+You just miss that we are investing with demand, if anything, behind demand at the moment.
+
+408
+00:24:22,340 --> 00:24:26,100
+A bubble to me suggests you're investing ahead of demand and there's going to be a gap.
+
+409
+00:24:26,460 --> 00:24:32,580
+And you look at productivity numbers, they're going up in the companies that are adapting AI,
+
+410
+00:24:33,200 --> 00:24:39,540
+especially the newer set of tech-oriented companies. The numbers are just absolutely
+
+411
+00:24:39,540 --> 00:24:46,420
+amazing. So one of my favorites is a little company called Slash, about $150 million,
+
+412
+00:24:46,540 --> 00:24:55,600
+and they have one person in the company, only a controller, because they adapted an AI-oriented
+
+413
+00:24:55,600 --> 00:25:04,720
+ERP system. They replaced NetSuite with it. And it's just amazing what they can do. And the CEO
+
+414
+00:25:04,720 --> 00:25:11,440
+was apologizing to me he might have to hire a second person. And they're moving really rapidly.
+
+415
+00:25:11,440 --> 00:25:16,000
+I just saw a story. Somebody replaced 10 SDRs with one SDR.
+
+416
+00:25:16,540 --> 00:25:18,100
+And I thought, what?
+
+417
+00:25:18,100 --> 00:25:25,060
+It's not even a 20-year-old AI. Essentially, the one SDR remaining supervises.
+
+418
+00:25:25,060 --> 00:25:31,040
+I've been hearing two stories about where instead of hiring somebody that's in an area that doesn't
+
+419
+00:25:31,040 --> 00:25:35,720
+create growth, they can now then when they hire, hire people who have created a lot more growth for
+
+420
+00:25:35,720 --> 00:25:38,720
+the company. And that's why you're seeing a lot of these tech companies just build so fast.
+
+421
+00:25:39,380 --> 00:25:45,700
+You know that old phrase, the future is here now, but it's not evenly distributed?
+
+422
+00:25:45,700 --> 00:25:46,000
+Yes.
+
+423
+00:25:46,000 --> 00:25:54,640
+huge productivity gains and efficiency gains or agility gains, the ability to move faster.
+
+424
+00:25:54,640 --> 00:26:02,680
+But very small percentage of the people in the world, in the US or worldwide, have adapted
+
+425
+00:26:02,680 --> 00:26:05,220
+these or even know they exist.
+
+426
+00:26:05,220 --> 00:26:15,200
+And so this issue back to demand, I think these ideas, some of these examples will spread
+
+427
+00:26:15,200 --> 00:26:17,720
+to everybody over time.
+
+428
+00:26:17,720 --> 00:26:21,420
+And you'll see an exponential growth of adoption of these technologies.
+
+429
+00:26:21,420 --> 00:26:23,800
+That's why I don't think demand is the question.
+
+430
+00:26:23,800 --> 00:26:24,800
+Yeah.
+
+431
+00:26:24,800 --> 00:26:26,300
+Vinod is absolutely spot on.
+
+432
+00:26:26,300 --> 00:26:30,880
+I think McKinsey did a study that showed for companies that are more in the top quartile,
+
+433
+00:26:30,880 --> 00:26:36,720
+their productivity is measured by any kind of financial metric you would pull is up in
+
+434
+00:26:36,720 --> 00:26:38,840
+the 27% to 33%.
+
+435
+00:26:38,840 --> 00:26:41,600
+That's a really meaningful jump.
+
+436
+00:26:41,600 --> 00:26:45,160
+I think where you were going is it doesn't just mean fewer employees over time.
+
+437
+00:26:45,160 --> 00:26:45,180
+Right.
+
+438
+00:26:45,180 --> 00:26:46,760
+It's a really meaningful jump.
+
+439
+00:26:46,760 --> 00:26:50,640
+I think there's definitely a place to shift people over into more growth-oriented jobs.
+
+440
+00:26:50,640 --> 00:26:55,620
+I was hiking this weekend with someone who runs a very large consulting company that
+
+441
+00:26:55,620 --> 00:26:57,200
+you all would know of.
+
+442
+00:26:57,200 --> 00:27:02,900
+And he was talking about how his and his, what he thinks of more his backend systems.
+
+443
+00:27:02,900 --> 00:27:07,420
+The leader there is now talking about her organization as people plus agents.
+
+444
+00:27:07,420 --> 00:27:11,560
+And she has a one to five ratio, one person to five agents.
+
+445
+00:27:11,560 --> 00:27:15,140
+But on the front end, they're actually back out rehiring to grow.
+
+446
+00:27:15,140 --> 00:27:19,200
+Because clients need more help now to think about deploying AI.
+
+447
+00:27:19,200 --> 00:27:25,200
+So it's actually shifting back, I would say, to the jobs people want to do, not the jobs
+
+448
+00:27:25,200 --> 00:27:28,820
+that maybe were just open to them because more and more of the world had become this
+
+449
+00:27:28,820 --> 00:27:33,440
+kind of, you know, so much information that people were parsing it.
+
+450
+00:27:33,440 --> 00:27:37,480
+Now we're finally back to a machine and agent intelligence parsing it.
+
+451
+00:27:37,480 --> 00:27:39,520
+I want to, I want to touch back on the consumer side.
+
+452
+00:27:39,520 --> 00:27:44,720
+You mentioned ads and certainly the argument we made that with ads, you can increase the,
+
+453
+00:27:44,720 --> 00:27:46,480
+the benefits to people.
+
+454
+00:27:46,480 --> 00:27:49,720
+You can provide more services, more AI, you can help pay for the compute and people get
+
+455
+00:27:49,720 --> 00:27:51,960
+more out of those tiers with that.
+
+456
+00:27:51,960 --> 00:27:54,280
+But that brings up the question though of trust.
+
+457
+00:27:54,280 --> 00:27:57,860
+And when people think about AI initially, even asking questions, people worried about
+
+458
+00:27:57,860 --> 00:28:00,560
+what does chat shipping to do with my information?
+
+459
+00:28:00,560 --> 00:28:05,780
+Once you have ads in play, people worry about that because it's often just a big question
+
+460
+00:28:05,780 --> 00:28:08,780
+of how does that affect the rest of the product and the org?
+
+461
+00:28:08,780 --> 00:28:09,780
+Yeah.
+
+462
+00:28:09,780 --> 00:28:13,780
+So I think you started in the right place, which is today, 95% of our users use our platform.
+
+463
+00:28:13,780 --> 00:28:13,980
+Yeah.
+
+464
+00:28:14,720 --> 00:28:17,020
+We use our platform for free on the consumer side.
+
+465
+00:28:17,020 --> 00:28:19,340
+And that's absolutely where our mission is, right?
+
+466
+00:28:19,340 --> 00:28:23,440
+AGI for the benefit of humanity, not the benefit of humanity who can pay, right?
+
+467
+00:28:23,440 --> 00:28:27,200
+So access is very important from an ads perspective.
+
+468
+00:28:27,200 --> 00:28:32,200
+I think number one, we have to just make sure everyone understands you're always going to
+
+469
+00:28:32,200 --> 00:28:33,720
+get the best answer.
+
+470
+00:28:33,720 --> 00:28:37,240
+The model can provide you not the paid for answer.
+
+471
+00:28:37,240 --> 00:28:40,980
+And I think other platforms have fallen back into that where you're not sure is this a
+
+472
+00:28:40,980 --> 00:28:44,480
+sponsored link or is this truly the best outcome?
+
+473
+00:28:44,480 --> 00:28:49,480
+We have a North Star, which is that the model will always give you the best answer.
+
+474
+00:28:49,480 --> 00:28:55,480
+I think the second thing to understand is that there can be a lot of utility in ads.
+
+475
+00:28:55,480 --> 00:28:59,480
+So we want to make sure people know when it is an ad that they're working with.
+
+476
+00:28:59,480 --> 00:29:05,480
+But for example, if I do a search for a weekend getaway to pick your favorite city, I don't
+
+477
+00:29:05,480 --> 00:29:10,480
+know, San Diego, an ad for Airbnb might actually be very helpful.
+
+478
+00:29:10,480 --> 00:29:12,480
+And you might even want to have a discussion with the ad or with the advertising.
+
+479
+00:29:12,480 --> 00:29:13,480
+So you can just say, hey, I'm going to pick a city.
+
+480
+00:29:13,480 --> 00:29:14,480
+I'm going to pick a city.
+
+481
+00:29:14,480 --> 00:29:15,480
+Hey, I'm interested.
+
+482
+00:29:15,480 --> 00:29:16,480
+I want to know where to go next.
+
+483
+00:29:16,480 --> 00:29:17,480
+And I'm going to look at this and I'm going to have the right answer in that case in a
+
+484
+00:29:17,480 --> 00:29:18,980
+chat GPT setting is very rich.
+
+485
+00:29:18,980 --> 00:29:21,340
+But you're clear that it's in an advertising setting.
+
+486
+00:29:21,340 --> 00:29:26,900
+And I think this is where there's there has to be more innovation on what feels endemic
+
+487
+00:29:26,900 --> 00:29:32,500
+to the platform, not just kind of the old world of stick banner ads on things.
+
+488
+00:29:32,500 --> 00:29:38,080
+And I think the third and final thing for me is, again, there always has to be a tier
+
+489
+00:29:38,080 --> 00:29:39,700
+where advertising doesn't exist.
+
+490
+00:29:39,700 --> 00:29:42,480
+So we give the user some choice and some control.
+
+491
+00:29:42,480 --> 00:29:43,480
+But we're very much...
+
+492
+00:29:43,480 --> 00:29:45,720
+but we're very mindful of your data.
+
+493
+00:29:45,720 --> 00:29:47,700
+When we released Health, we were very clear,
+
+494
+00:29:47,700 --> 00:29:49,720
+your data is off to one side,
+
+495
+00:29:49,720 --> 00:29:51,940
+it's not being used to train on and so on.
+
+496
+00:29:51,940 --> 00:29:53,800
+And I think we just need to keep giving users
+
+497
+00:29:53,800 --> 00:29:57,080
+that kind of that trust is everything for open AI
+
+498
+00:29:57,080 --> 00:29:59,200
+and that we're going to stand by those principles,
+
+499
+00:29:59,200 --> 00:30:01,620
+even when it comes to things like ads.
+
+500
+00:30:01,620 --> 00:30:04,540
+On the consumer side, is it gonna be a world
+
+501
+00:30:04,540 --> 00:30:05,760
+where you're gonna have a lot of subscriptions
+
+502
+00:30:05,760 --> 00:30:07,660
+to different AI services?
+
+503
+00:30:07,660 --> 00:30:09,660
+I think you'll have every model.
+
+504
+00:30:09,660 --> 00:30:12,560
+Most people will have more than one subscription.
+
+505
+00:30:12,560 --> 00:30:13,820
+Media is a good example.
+
+506
+00:30:13,820 --> 00:30:17,280
+Most people have more than one subscription in media.
+
+507
+00:30:17,280 --> 00:30:20,660
+And so that's a good proxy for consumer behavior.
+
+508
+00:30:21,620 --> 00:30:24,840
+Different people will pick different choices,
+
+509
+00:30:24,840 --> 00:30:27,120
+including free choices, which also,
+
+510
+00:30:27,120 --> 00:30:30,480
+which is ad supported media too.
+
+511
+00:30:30,480 --> 00:30:35,480
+So even the same services you can get for pay or for free,
+
+512
+00:30:35,640 --> 00:30:38,420
+I think you'll see a wide range of diversity.
+
+513
+00:30:38,420 --> 00:30:40,280
+How do you think about though,
+
+514
+00:30:40,280 --> 00:30:42,420
+the expense of going
+
+515
+00:30:42,420 --> 00:30:43,460
+into a different platform?
+
+516
+00:30:43,460 --> 00:30:46,080
+So I like ChatGPT memory.
+
+517
+00:30:46,080 --> 00:30:48,140
+I'm finding it more and more helpful
+
+518
+00:30:48,140 --> 00:30:49,740
+because as I ask about one thing,
+
+519
+00:30:49,740 --> 00:30:52,120
+it remembers something we talked about maybe weeks ago,
+
+520
+00:30:52,120 --> 00:30:56,880
+months ago, Pulse, which is today not widely distributed,
+
+521
+00:30:56,880 --> 00:30:59,180
+but it's the way I wake up in the morning now.
+
+522
+00:30:59,180 --> 00:31:01,000
+It's so amazing.
+
+523
+00:31:01,000 --> 00:31:03,660
+And when you start connecting it to things like your calendar,
+
+524
+00:31:03,660 --> 00:31:05,320
+so it's not just saying, you know,
+
+525
+00:31:05,320 --> 00:31:07,680
+you Sarah are very interested in AI data centers,
+
+526
+00:31:07,680 --> 00:31:10,140
+which clearly it must think I'm the most boring person
+
+527
+00:31:10,140 --> 00:31:12,360
+on earth, because this is what I see a lot of, but it also,
+
+528
+00:31:12,360 --> 00:31:14,220
+it also says, Hey, on your calendar,
+
+529
+00:31:14,220 --> 00:31:16,420
+you're going to be sitting down with the node today.
+
+530
+00:31:16,420 --> 00:31:18,400
+You know, remember a couple of these things.
+
+531
+00:31:18,400 --> 00:31:23,400
+Like it's so helpful, but if I am multi-home lying,
+
+532
+00:31:23,400 --> 00:31:24,480
+I'm losing the benefit,
+
+533
+00:31:24,480 --> 00:31:27,900
+which is not the same as if I subscribe to the wall street
+
+534
+00:31:27,900 --> 00:31:29,820
+journal, the economist in the New York times,
+
+535
+00:31:29,820 --> 00:31:31,720
+they're not really losing out.
+
+536
+00:31:31,720 --> 00:31:34,120
+If I go read in other places in the same way,
+
+537
+00:31:34,120 --> 00:31:35,400
+or I'm not losing out.
+
+538
+00:31:35,400 --> 00:31:36,240
+Yeah.
+
+539
+00:31:36,240 --> 00:31:40,260
+So I do think memory is an important question,
+
+540
+00:31:40,260 --> 00:31:42,120
+whether there'll be one per wearer,
+
+541
+00:31:42,120 --> 00:31:45,500
+more than one per wearer of the models on each model,
+
+542
+00:31:45,500 --> 00:31:48,920
+there'll be multiple services that may offer different trade
+
+543
+00:31:48,920 --> 00:31:49,760
+offs.
+
+544
+00:31:49,760 --> 00:31:55,010
+So even whether you're talking health or media,
+
+545
+00:31:55,830 --> 00:31:58,270
+even on the opening AI models,
+
+546
+00:31:58,270 --> 00:32:02,650
+there's multiple people providing services.
+
+547
+00:32:02,650 --> 00:32:05,990
+So that's what I was thinking of multi-homing,
+
+548
+00:32:05,990 --> 00:32:09,070
+but obviously I don't think opening AI will be a hundred
+
+549
+00:32:09,070 --> 00:32:10,770
+percent of the market.
+
+550
+00:32:10,770 --> 00:32:11,610
+I hope so.
+
+551
+00:32:11,610 --> 00:32:12,370
+I was going to say,
+
+552
+00:32:12,370 --> 00:32:13,210
+I'm okay with that.
+
+553
+00:32:13,210 --> 00:32:16,090
+It's an interesting business model.
+
+554
+00:32:16,090 --> 00:32:18,130
+I think it's hard for people to wrap their heads around because
+
+555
+00:32:18,130 --> 00:32:20,650
+like Netflix is a great company,
+
+556
+00:32:20,650 --> 00:32:23,530
+but there's only so many hours on the planet that people can
+
+557
+00:32:23,530 --> 00:32:24,370
+watch Netflix.
+
+558
+00:32:24,370 --> 00:32:25,510
+Right. And mobile's great.
+
+559
+00:32:25,510 --> 00:32:27,050
+Right. I only,
+
+560
+00:32:27,050 --> 00:32:29,590
+I'd only need so many minutes of mobile per week or whatever
+
+561
+00:32:29,590 --> 00:32:32,130
+to do that with AI and intelligence.
+
+562
+00:32:32,130 --> 00:32:33,630
+You can have more intelligence.
+
+563
+00:32:33,630 --> 00:32:35,910
+I can buy more and get better answers and do this.
+
+564
+00:32:35,910 --> 00:32:36,990
+And I think that's,
+
+565
+00:32:36,990 --> 00:32:39,470
+I think I'm still trying to wrap my head around about where,
+
+566
+00:32:39,470 --> 00:32:40,310
+where that goes.
+
+567
+00:32:40,310 --> 00:32:41,350
+The idea that like you started,
+
+568
+00:32:41,350 --> 00:32:42,190
+like, you know,
+
+569
+00:32:42,190 --> 00:32:43,030
+one level of free,
+
+570
+00:32:43,030 --> 00:32:43,950
+you know, use it for free.
+
+571
+00:32:43,950 --> 00:32:46,250
+Then you go to a smaller tier and then as it becomes more
+
+572
+00:32:46,250 --> 00:32:48,130
+useful, you start increasing that.
+
+573
+00:32:48,130 --> 00:32:49,170
+Where does it go?
+
+574
+00:32:49,170 --> 00:32:51,830
+So I think unlike something like Netflix,
+
+575
+00:32:51,830 --> 00:32:53,090
+where they're running so many hours in the day,
+
+576
+00:32:53,090 --> 00:32:54,950
+I think of it much more like infrastructure,
+
+577
+00:32:54,950 --> 00:32:56,150
+like electricity.
+
+578
+00:32:56,150 --> 00:32:57,950
+How much electricity do you use in the day?
+
+579
+00:32:57,950 --> 00:32:58,770
+I don't know.
+
+580
+00:32:58,770 --> 00:33:00,910
+I walked into a room today and there was a fan blowing.
+
+581
+00:33:00,910 --> 00:33:01,750
+It was really nice.
+
+582
+00:33:01,750 --> 00:33:02,690
+It cooled it down.
+
+583
+00:33:02,690 --> 00:33:05,690
+There are lights on around us right now.
+
+584
+00:33:05,690 --> 00:33:06,690
+You know, there's so many,
+
+585
+00:33:06,690 --> 00:33:10,230
+I charged my phone overnight and it worked for me all day.
+
+586
+00:33:10,230 --> 00:33:14,690
+So I think that the state we live in today is much more.
+
+587
+00:33:14,690 --> 00:33:16,470
+I call on chat GPT.
+
+588
+00:33:16,470 --> 00:33:21,010
+I invoke it as opposed to intelligence just being baked in.
+
+589
+00:33:21,010 --> 00:33:24,170
+Like, I think this will be the big change over the next couple of years.
+
+590
+00:33:24,170 --> 00:33:25,950
+You'll kind of look back almost,
+
+591
+00:33:25,950 --> 00:33:29,410
+it'll feel a little toy like that we used to do this thing.
+
+592
+00:33:29,410 --> 00:33:32,890
+And instead it just is everywhere around us.
+
+593
+00:33:32,890 --> 00:33:35,350
+And so it's not really quite asking,
+
+594
+00:33:35,350 --> 00:33:37,350
+answering the question you're asking,
+
+595
+00:33:37,350 --> 00:33:40,210
+but it's that I don't get so caught up that there's only so many,
+
+596
+00:33:40,230 --> 00:33:44,130
+hours for people to do things because I feel like almost everything I do in
+
+597
+00:33:44,130 --> 00:33:48,510
+life requires intelligence because I'm walking around hopefully with some
+
+598
+00:33:48,510 --> 00:33:49,610
+intelligence up here.
+
+599
+00:33:49,850 --> 00:33:52,050
+And if I can get that augmented,
+
+600
+00:33:52,590 --> 00:33:53,250
+um,
+
+601
+00:33:53,250 --> 00:33:54,530
+I think it's going to surprise us.
+
+602
+00:33:54,530 --> 00:33:56,970
+Like as we were talking before we got started,
+
+603
+00:33:56,970 --> 00:34:00,270
+you said about on your phone when you suddenly discovered you had a flashlight
+
+604
+00:34:00,270 --> 00:34:01,110
+and a camera,
+
+605
+00:34:01,850 --> 00:34:02,590
+it is,
+
+606
+00:34:02,590 --> 00:34:04,710
+you say that it's so obvious.
+
+607
+00:34:05,130 --> 00:34:06,570
+And yet with chat GPT,
+
+608
+00:34:06,570 --> 00:34:08,310
+every time I discover kind of a,
+
+609
+00:34:08,510 --> 00:34:10,230
+what feels like almost a slightly cute,
+
+610
+00:34:10,230 --> 00:34:11,070
+use case,
+
+611
+00:34:11,470 --> 00:34:13,130
+I'm so blown away by it.
+
+612
+00:34:13,130 --> 00:34:15,150
+Like yesterday morning,
+
+613
+00:34:15,550 --> 00:34:17,110
+I do love the economist.
+
+614
+00:34:17,350 --> 00:34:18,970
+I wanted to read the editorial.
+
+615
+00:34:18,990 --> 00:34:22,210
+I didn't really have a ton of time because of running upstairs to get ready.
+
+616
+00:34:22,450 --> 00:34:24,750
+So I took a photograph of the editorial cause they're very good.
+
+617
+00:34:24,750 --> 00:34:29,610
+They put it on one page and I asked chat GPT to read it to me and it did it.
+
+618
+00:34:29,850 --> 00:34:30,750
+And I was like,
+
+619
+00:34:30,810 --> 00:34:32,010
+Oh my God,
+
+620
+00:34:32,010 --> 00:34:33,310
+this is awesome.
+
+621
+00:34:33,630 --> 00:34:37,990
+So I just think there are all these moments where we're just getting started and
+
+622
+00:34:37,990 --> 00:34:40,230
+multimodal I think is probably the biggest.
+
+623
+00:34:40,830 --> 00:34:43,690
+Because phones taught us to talk with our thumbs.
+
+624
+00:34:44,010 --> 00:34:46,110
+And I think there's new world we're moving into.
+
+625
+00:34:46,110 --> 00:34:49,830
+There's going to be new hardware that just really help us understand that we
+
+626
+00:34:49,830 --> 00:34:50,490
+can talk,
+
+627
+00:34:50,490 --> 00:34:51,150
+we can listen,
+
+628
+00:34:51,150 --> 00:34:51,930
+we can see,
+
+629
+00:34:51,930 --> 00:34:56,930
+we can write and do all of these things in a very human way that we're just
+
+630
+00:34:57,190 --> 00:34:58,230
+scratching the surface off.
+
+631
+00:34:58,810 --> 00:35:00,870
+So let me give you a different frame on that.
+
+632
+00:35:00,870 --> 00:35:02,370
+I agree with all of that.
+
+633
+00:35:03,500 --> 00:35:07,860
+If you look at what we talked about the internet earlier and the bubble
+
+634
+00:35:07,860 --> 00:35:08,880
+associated with it,
+
+635
+00:35:08,940 --> 00:35:10,600
+but what the internet did,
+
+636
+00:35:11,220 --> 00:35:15,100
+is give you access to a lot more stuff,
+
+637
+00:35:15,580 --> 00:35:17,760
+whether it was media,
+
+638
+00:35:17,860 --> 00:35:22,800
+YouTube videos or TikTok or you name it,
+
+639
+00:35:22,880 --> 00:35:24,600
+information of any sort.
+
+640
+00:35:26,320 --> 00:35:31,320
+But it's expanded it to the point where no human can actually use the internet
+
+641
+00:35:31,720 --> 00:35:32,540
+fully.
+
+642
+00:35:33,100 --> 00:35:38,100
+I think of AI as given you're limited to 8,000 some hours a day,
+
+643
+00:35:39,280 --> 00:35:41,200
+some of which is meant for sleeping.
+
+644
+00:35:41,200 --> 00:35:45,820
+It'll make your time much more efficient.
+
+645
+00:35:46,140 --> 00:35:51,140
+So the internet exploded information available to you to the point where you
+
+646
+00:35:51,460 --> 00:35:52,300
+couldn't use it.
+
+647
+00:35:52,700 --> 00:35:57,400
+And I think what AI will do is filter it to make your every hour the most
+
+648
+00:35:57,400 --> 00:36:00,160
+effective hour if you know how to use it.
+
+649
+00:36:00,460 --> 00:36:05,460
+So intelligence will reduce the world to what is most relevant to you personally.
+
+650
+00:36:07,100 --> 00:36:09,840
+And I may have a different set of priorities than Sarah.
+
+651
+00:36:10,200 --> 00:36:10,840
+So I think of AI as given you're limited to 8,000 some hours a day,
+
+652
+00:36:10,840 --> 00:36:15,940
+but I think of intelligence as summarizing the world to the most relevant things for me,
+
+653
+00:36:16,420 --> 00:36:18,880
+and the most relevant things to her,
+
+654
+00:36:18,900 --> 00:36:19,800
+which are different.
+
+655
+00:36:20,920 --> 00:36:32,360
+So I think that's where there's almost unlimited capacity for intelligence to be used to reduce information when the internet exploded information.
+
+656
+00:36:32,600 --> 00:36:32,880
+Yeah.
+
+657
+00:36:33,200 --> 00:36:33,400
+Yeah.
+
+658
+00:36:33,760 --> 00:36:34,160
+We've,
+
+659
+00:36:34,160 --> 00:36:38,860
+we've talked a lot about the consumer side and it feels like OpenAI is very much winning the consumer side.
+
+660
+00:36:39,160 --> 00:36:41,160
+Question comes up about enterprise.
+
+661
+00:36:41,160 --> 00:36:46,660
+And how is OpenAI going to compete and win in that area?
+
+662
+00:36:46,960 --> 00:36:49,760
+So I think we're already winning in this area.
+
+663
+00:36:50,760 --> 00:36:52,400
+What I see is,
+
+664
+00:36:52,440 --> 00:36:52,740
+you know,
+
+665
+00:36:52,860 --> 00:36:59,660
+90% of corporations are saying they either are using OpenAI or intend to use over the next 12 months.
+
+666
+00:36:59,660 --> 00:37:00,160
+Right.
+
+667
+00:37:00,160 --> 00:37:04,400
+I think the second is Microsoft and Microsoft's using our technology.
+
+668
+00:37:04,660 --> 00:37:05,960
+So I actually think we have,
+
+669
+00:37:05,960 --> 00:37:10,280
+this is where the consumer is a really potent part of the enterprise flywheel.
+
+670
+00:37:10,540 --> 00:37:10,980
+So,
+
+671
+00:37:10,980 --> 00:37:12,060
+as I said earlier,
+
+672
+00:37:12,260 --> 00:37:13,180
+when someone,
+
+673
+00:37:13,220 --> 00:37:13,480
+you know,
+
+674
+00:37:13,480 --> 00:37:18,860
+you back in the day when you first started bringing your iPhone to work and corporates didn't want you to do that,
+
+675
+00:37:19,140 --> 00:37:23,540
+you just discovered you can't say no to the tidal wave that is consumer preference.
+
+676
+00:37:23,760 --> 00:37:28,020
+So something I'm already using that I've already got in my pocket and I get to work.
+
+677
+00:37:28,020 --> 00:37:30,840
+My expectation is work is at least as good,
+
+678
+00:37:30,860 --> 00:37:31,820
+if not better.
+
+679
+00:37:32,120 --> 00:37:32,840
+And so that's,
+
+680
+00:37:32,840 --> 00:37:34,300
+what's helped drive our internet,
+
+681
+00:37:34,320 --> 00:37:36,580
+our actual enterprise business,
+
+682
+00:37:36,600 --> 00:37:40,660
+the fastest company ever to get to 1 million businesses on a platform.
+
+683
+00:37:40,660 --> 00:37:40,800
+Yeah.
+
+684
+00:37:40,800 --> 00:37:40,940
+Yeah.
+
+685
+00:37:40,980 --> 00:37:43,080
+And we did that in about a year and a half.
+
+686
+00:37:43,660 --> 00:37:44,260
+Um,
+
+687
+00:37:44,300 --> 00:37:45,480
+but where to from here?
+
+688
+00:37:45,480 --> 00:37:47,980
+Because clearly we're just scratching the surface.
+
+689
+00:37:48,240 --> 00:37:54,640
+So some of it is certainly meeting customers in terms of their vertical so that we talk to them in their language.
+
+690
+00:37:54,920 --> 00:37:57,120
+And we learned this art of enterprise selling,
+
+691
+00:37:57,120 --> 00:37:57,700
+which is,
+
+692
+00:37:57,960 --> 00:38:00,500
+let me not tell you all about my products,
+
+693
+00:38:00,720 --> 00:38:02,700
+but let me understand your problem.
+
+694
+00:38:02,940 --> 00:38:03,060
+Like,
+
+695
+00:38:03,060 --> 00:38:05,040
+what is your board forcing on you?
+
+696
+00:38:05,080 --> 00:38:05,440
+Mr.
+
+697
+00:38:05,440 --> 00:38:05,780
+Mrs.
+
+698
+00:38:05,780 --> 00:38:06,580
+CEO,
+
+699
+00:38:06,820 --> 00:38:10,180
+what is the thing your customers most want that you can't deliver?
+
+700
+00:38:10,200 --> 00:38:10,620
+Okay,
+
+701
+00:38:10,620 --> 00:38:10,960
+let's say,
+
+702
+00:38:10,980 --> 00:38:13,080
+let's start putting intelligence against that.
+
+703
+00:38:13,480 --> 00:38:20,880
+We can then drop that down into some light vertical specialization to quite heavy vertical specialization.
+
+704
+00:38:20,880 --> 00:38:25,140
+Things like RL models that are very pertinent to a use case.
+
+705
+00:38:25,360 --> 00:38:25,620
+Like,
+
+706
+00:38:25,620 --> 00:38:27,460
+let's say in an energy company,
+
+707
+00:38:27,660 --> 00:38:33,660
+it might be really understanding that particular oil well or all the seismic data they have to say,
+
+708
+00:38:33,660 --> 00:38:39,820
+what's the recovery we're going to get out of this gas field like that is deep specialization.
+
+709
+00:38:39,820 --> 00:38:40,700
+And then I think it gets,
+
+710
+00:38:40,700 --> 00:38:51,500
+it gets the whole way to some of these big transformational research projects that we have begun where we're actually almost taking over someone's whole business and helping them rethink it in a smarter,
+
+711
+00:38:51,500 --> 00:38:52,400
+faster,
+
+712
+00:38:52,580 --> 00:38:55,580
+better way that ultimately drives their key business metrics.
+
+713
+00:38:55,880 --> 00:38:57,320
+So it's a journey.
+
+714
+00:38:57,360 --> 00:39:01,660
+I think most corporates have started with wall to wall chat GPT.
+
+715
+00:39:01,660 --> 00:39:03,380
+That's an easy starting point.
+
+716
+00:39:03,740 --> 00:39:05,180
+They've done some coding.
+
+717
+00:39:05,300 --> 00:39:05,900
+Um,
+
+718
+00:39:06,100 --> 00:39:06,860
+and in many cases,
+
+719
+00:39:06,860 --> 00:39:07,700
+a lot of coding,
+
+720
+00:39:07,760 --> 00:39:08,840
+like when I talk to corporates,
+
+721
+00:39:08,840 --> 00:39:09,200
+they're not,
+
+722
+00:39:09,200 --> 00:39:10,580
+CEOs are starting to say things.
+
+723
+00:39:10,580 --> 00:39:14,980
+Like 60% of all my production code was built by,
+
+724
+00:39:15,020 --> 00:39:15,440
+you know,
+
+725
+00:39:15,440 --> 00:39:16,340
+an agent.
+
+726
+00:39:16,600 --> 00:39:16,940
+And I'm like,
+
+727
+00:39:16,940 --> 00:39:18,380
+you didn't even know what,
+
+728
+00:39:18,560 --> 00:39:18,740
+you know,
+
+729
+00:39:18,740 --> 00:39:20,820
+production code man 12 months ago,
+
+730
+00:39:20,820 --> 00:39:22,460
+but now you're saying that that's good.
+
+731
+00:39:22,460 --> 00:39:23,600
+Cause it means you're tracking it.
+
+732
+00:39:24,140 --> 00:39:24,540
+Um,
+
+733
+00:39:24,560 --> 00:39:26,000
+but on agents,
+
+734
+00:39:26,060 --> 00:39:27,460
+it's just starting.
+
+735
+00:39:27,500 --> 00:39:31,460
+Like we only see about 14% of all kind of customers.
+
+736
+00:39:31,460 --> 00:39:33,440
+When you go out and just survey us,
+
+737
+00:39:33,440 --> 00:39:36,380
+corporates are using something agentic today,
+
+738
+00:39:36,380 --> 00:39:40,480
+14% when I just explained what's happening in my finance organization,
+
+739
+00:39:40,580 --> 00:39:42,980
+so I think we are just getting going,
+
+740
+00:39:43,020 --> 00:39:45,740
+but I couldn't be more excited about the opportunity.
+
+741
+00:39:45,740 --> 00:39:46,760
+It's huge.
+
+742
+00:39:47,080 --> 00:39:47,920
+Okay.
+
+743
+00:39:48,060 --> 00:39:52,680
+But if I'm a startup and I look at everything open eyes doing,
+
+744
+00:39:52,680 --> 00:39:54,320
+I might be asking,
+
+745
+00:39:54,320 --> 00:39:55,340
+is there room for me?
+
+746
+00:39:55,400 --> 00:39:56,260
+What do I get to do?
+
+747
+00:39:56,800 --> 00:40:00,380
+The models will keep getting better and do more and more,
+
+748
+00:40:00,740 --> 00:40:04,000
+but I do believe there's lots of room to build on top.
+
+749
+00:40:05,380 --> 00:40:05,600
+You know,
+
+750
+00:40:05,600 --> 00:40:07,960
+no one company can do everything on the planet.
+
+751
+00:40:08,740 --> 00:40:10,640
+There's billions of companies,
+
+752
+00:40:10,640 --> 00:40:15,640
+billions of people who are working that whose job AI can help with.
+
+753
+00:40:16,780 --> 00:40:20,400
+I don't think open AI will specialize in everyone.
+
+754
+00:40:20,560 --> 00:40:23,760
+So I think the careful thing to do is,
+
+755
+00:40:24,360 --> 00:40:29,360
+is be clear where the models will go open AI or others and what they will be
+
+756
+00:40:31,460 --> 00:40:32,300
+able to do.
+
+757
+00:40:32,720 --> 00:40:37,720
+And how do you use that best to then specialize into a more interesting world?
+
+758
+00:40:37,720 --> 00:40:42,980
+Some sort of specialization where you add something that's additional to the
+
+759
+00:40:42,980 --> 00:40:44,940
+base models in frankly,
+
+760
+00:40:44,940 --> 00:40:49,220
+just intelligence isn't the only thing to provide a solution.
+
+761
+00:40:49,480 --> 00:40:54,480
+There's lots of other stuff that goes around solution beyond intelligence.
+
+762
+00:40:54,480 --> 00:40:58,480
+So I think there's lots of opportunity to build on top of these models and the
+
+763
+00:40:58,480 --> 00:40:59,820
+more powerful they get,
+
+764
+00:41:00,120 --> 00:41:04,140
+the number of opportunities to add to it dramatically increases.
+
+765
+00:41:04,480 --> 00:41:06,120
+How do you think the AI will be able to do that?
+
+766
+00:41:06,120 --> 00:41:06,960
+I think it's,
+
+767
+00:41:06,960 --> 00:41:07,820
+it's,
+
+768
+00:41:07,820 --> 00:41:08,400
+it's the way we think about,
+
+769
+00:41:08,400 --> 00:41:12,560
+so I think a lot about use cases where there's already a lot of,
+
+770
+00:41:13,060 --> 00:41:13,860
+um,
+
+771
+00:41:13,860 --> 00:41:17,620
+data that's being aggregated perhaps by that startup,
+
+772
+00:41:17,660 --> 00:41:19,320
+by that company that,
+
+773
+00:41:19,320 --> 00:41:19,520
+you know,
+
+774
+00:41:19,520 --> 00:41:23,240
+today I think 95% of the world's information actually sits behind corporate
+
+775
+00:41:23,240 --> 00:41:23,820
+firewalls,
+
+776
+00:41:23,820 --> 00:41:25,400
+university firewalls and so on.
+
+777
+00:41:25,400 --> 00:41:26,240
+So there's,
+
+778
+00:41:26,240 --> 00:41:30,060
+even though we talk about the vast training that's occurred again,
+
+779
+00:41:30,120 --> 00:41:31,340
+we're just getting going.
+
+780
+00:41:31,540 --> 00:41:35,240
+But I think companies that have already built businesses that have aggregated
+
+781
+00:41:35,240 --> 00:41:36,480
+that data have access to it.
+
+782
+00:41:36,500 --> 00:41:37,600
+And then on top of that,
+
+783
+00:41:37,600 --> 00:41:43,380
+have managed complex workflows. So I often give the example of our procurement system.
+
+784
+00:41:43,700 --> 00:41:48,680
+Procurement system per se, not that complicated. But what it does very well is it understands
+
+785
+00:41:48,680 --> 00:41:54,040
+things like delegation of authority. So it knows what the board has approved in terms of approval
+
+786
+00:41:54,040 --> 00:42:00,840
+limits. So it knows that when this software contract comes in, it's over X amount, so only
+
+787
+00:42:00,840 --> 00:42:06,560
+I can approve it. Or if it's beneath that, but it knows a VP can approve it. It doesn't know
+
+788
+00:42:06,560 --> 00:42:12,480
+that Andrew's a VP, but it knows to touch the HRS system and check what's his level. And so the
+
+789
+00:42:12,480 --> 00:42:17,860
+whole procurement flow can happen in a way where I have compliance and governance and hopefully
+
+790
+00:42:17,860 --> 00:42:23,120
+makes just the whole company run faster. Those are places I get interested for startups. So
+
+791
+00:42:23,120 --> 00:42:28,080
+wherever you've got access to unique data with a complex workflow, it feels like there's more of a
+
+792
+00:42:28,080 --> 00:42:32,880
+moat around that, that we want to work alongside you, but the general purpose model is not going
+
+793
+00:42:32,880 --> 00:42:36,460
+to do all of that itself. Yeah, no, I completely
+
+794
+00:42:36,460 --> 00:42:42,600
+buy that. I think there's lots of opportunity. I've seen quite a few startups around just
+
+795
+00:42:42,600 --> 00:42:50,160
+permissioning around data. Like who can do access to what information? For example, I've seen a whole
+
+796
+00:42:50,160 --> 00:42:57,980
+bunch of startups around customizing to each company, the models for their history and their
+
+797
+00:42:57,980 --> 00:43:05,520
+priorities. And the agent, the whole identity side of agents, I think we're just starting to
+
+798
+00:43:05,520 --> 00:43:06,080
+understand.
+
+799
+00:43:06,460 --> 00:43:11,000
+But the risk that can happen when you have agents talking to agents talking to agents,
+
+800
+00:43:11,160 --> 00:43:15,100
+but then also how are you going to permission that and then start to think about like agentic
+
+801
+00:43:15,100 --> 00:43:22,280
+commerce, like the complexity that's coming is also quite big. So to suggest there's no more
+
+802
+00:43:22,280 --> 00:43:26,500
+opportunity as a startup, I think it's never been probably more interesting or fun to be a startup.
+
+803
+00:43:27,060 --> 00:43:30,260
+Yeah, I think there's more opportunities than they've ever been.
+
+804
+00:43:30,560 --> 00:43:33,440
+What are you looking for now? What gets you excited when you talk to a company?
+
+805
+00:43:33,560 --> 00:43:35,480
+Well, the hardest thing is great people.
+
+806
+00:43:36,460 --> 00:43:46,440
+Always. But I think the other thing that has been in short supply is agency, where people
+
+807
+00:43:46,440 --> 00:43:54,860
+sort of have the agency to make things happen. That's again, comes down to people. But there's
+
+808
+00:43:54,860 --> 00:44:01,600
+so much opportunity. I think traditional things like knowing a space or experiencing space is
+
+809
+00:44:01,600 --> 00:44:06,260
+much less relevant now. It's more agency. We've not talked about,
+
+810
+00:44:06,460 --> 00:44:11,260
+the whole new world of robotics and real world models and all that.
+
+811
+00:44:11,660 --> 00:44:15,240
+That's a whole space by itself that we probably don't have time for.
+
+812
+00:44:15,380 --> 00:44:20,640
+Well, do we? We've got plenty of time. I want to go there.
+
+813
+00:44:20,760 --> 00:44:24,920
+Yeah, because we talked about where we're headed here. And you famously talked about kind of the
+
+814
+00:44:24,920 --> 00:44:28,720
+role of 2050 and things are moving fast. Models are getting faster and more capable.
+
+815
+00:44:29,620 --> 00:44:32,520
+And where do you see things like robotics headed?
+
+816
+00:44:32,840 --> 00:44:36,420
+Well, I think two years ago, when I gave a talk,
+
+817
+00:44:36,460 --> 00:44:44,960
+at TED, I said the robotics business, both Bypill and other robots, will be a larger business
+
+818
+00:44:44,960 --> 00:44:52,140
+in 15 years than the auto industry is today. We think of auto industry as one of the larger
+
+819
+00:44:52,140 --> 00:45:00,090
+businesses on the planet. And this other thing will be larger. I don't think there's very many
+
+820
+00:45:00,090 --> 00:45:05,610
+automotive companies who are thinking of the world that way. They're thinking about how to use a robot
+
+821
+00:45:05,610 --> 00:45:06,730
+in their assembly line. They're thinking about how to use a robot in their assembly line.
+
+822
+00:45:06,750 --> 00:45:13,370
+Not that that business is larger than their current business, all driven by the intelligence
+
+823
+00:45:13,370 --> 00:45:20,850
+of robots. So massive opportunities for startups there. And we're seeing a lot of activities.
+
+824
+00:45:21,830 --> 00:45:26,210
+Yeah. And I think sometimes we underestimate. So when you think about robots in the home,
+
+825
+00:45:26,410 --> 00:45:30,870
+right, people, very fertile area, no one's really had a breakthrough, though. There's so many
+
+826
+00:45:30,870 --> 00:45:35,810
+different issues around the complexity. Actually, sometimes the more time I spend in AI,
+
+827
+00:45:35,810 --> 00:45:36,670
+they actually,
+
+828
+00:45:36,750 --> 00:45:42,610
+the more respect I have for the human condition in a way, because our ability to move around the
+
+829
+00:45:42,610 --> 00:45:47,650
+world and do, you know, if you watch like the people in robotics getting so excited about a
+
+830
+00:45:47,650 --> 00:45:53,070
+robot folding clothes, you know, perhaps my 18 year old, I'd be just as excited about. But for
+
+831
+00:45:53,070 --> 00:45:58,250
+the average human, I assume they can fold clothes. But I think the hell of robotics.
+
+832
+00:45:59,070 --> 00:46:05,490
+But you do get a little stuck in your head that they have to somehow be a human. But it turns out
+
+833
+00:46:05,490 --> 00:46:06,710
+there may just be.
+
+834
+00:46:06,750 --> 00:46:13,290
+These breakthrough moments, like, for example, companionship in the home, right? We have an aging
+
+835
+00:46:13,290 --> 00:46:18,070
+population. What's one of the biggest, you know, we talk about epidemics in the world. Loneliness,
+
+836
+00:46:18,250 --> 00:46:24,570
+probably one of the biggest epidemics. What does someone living alone, maybe has just lost a spouse
+
+837
+00:46:24,570 --> 00:46:30,030
+value most just someone to converse with in a way that feels intuitive and human. We see people
+
+838
+00:46:30,030 --> 00:46:35,990
+using chat GPT more and more for this conversation. But is there a humanoid ask breakthrough,
+
+839
+00:46:36,090 --> 00:46:36,570
+or is there a breakthrough?
+
+840
+00:46:36,570 --> 00:46:40,510
+It turns out you don't need it to make coffee or fold clothes or do the dishes,
+
+841
+00:46:40,510 --> 00:46:45,150
+although that would be good too. But it might just be something a little bit more simple that
+
+842
+00:46:45,150 --> 00:46:53,190
+still adds a lot of value. And it's just the first crawl of crawl, walk, run of this kind of future
+
+843
+00:46:53,190 --> 00:46:59,410
+that Benoit is talking about where that whole complex is X times more valuable ever than we
+
+844
+00:46:59,410 --> 00:47:00,530
+saw in automotives.
+
+845
+00:47:01,070 --> 00:47:06,150
+I think that it's interesting because we can sort of think of kind of like our present and put robots
+
+846
+00:47:06,150 --> 00:47:06,550
+in place.
+
+847
+00:47:06,570 --> 00:47:13,870
+And so it's really hard to think of when you really have extremely low cost labor manufacturing,
+
+848
+00:47:14,050 --> 00:47:18,170
+et cetera, and then the world you can build from there because, you know, we can look at that's a
+
+849
+00:47:18,170 --> 00:47:22,730
+good solution for now. But when the cost of building a wonderful state of the art assisted
+
+850
+00:47:22,730 --> 00:47:26,970
+living facility where you can put a bunch of people together, the cost drops. I think that's
+
+851
+00:47:26,970 --> 00:47:30,990
+the thing I have. The hardest problem is for me is to really think like, what does it really mean
+
+852
+00:47:30,990 --> 00:47:34,650
+when you lower the cost? We've learned the cost of intelligence. What does it mean we really lower
+
+853
+00:47:34,650 --> 00:47:35,190
+the cost of labor?
+
+854
+00:47:35,190 --> 00:47:44,150
+My personal view, sometime probably towards the end of the next decade, you'll see a massively
+
+855
+00:47:44,150 --> 00:47:52,590
+deflationary economy because labor will be near free. Expertise will be near free. Most functions
+
+856
+00:47:52,590 --> 00:48:00,510
+will be almost zero cost. How it exactly plays out, a little hard to tell. How purchasing power
+
+857
+00:48:00,510 --> 00:48:05,150
+versus production of goods and services plays out. But I expect we'll see.
+
+858
+00:48:05,190 --> 00:48:11,850
+A hugely deflationary economy at a level people aren't planning on. So there's social aspects
+
+859
+00:48:11,850 --> 00:48:19,410
+of adoption of AI that hasn't been handled yet. I think the conversation we need to have is,
+
+860
+00:48:19,710 --> 00:48:28,550
+what will people do? I get asked that a lot. How will people make a living? I think the minimum
+
+861
+00:48:28,550 --> 00:48:35,090
+standard of living governments can assure people is going to be much, much higher.
+
+862
+00:48:35,510 --> 00:48:42,340
+I can't imagine a world without the need to earn an income. I mean, I can't imagine much better
+
+863
+00:48:42,340 --> 00:48:48,470
+primary care, like 10x more primary care than today. It doesn't happen for a dollar a month.
+
+864
+00:48:48,950 --> 00:48:57,040
+I have a hard time imagining how that happens. It will be true. It costs almost nothing to have
+
+865
+00:48:57,040 --> 00:49:04,600
+free primary care, free education, almost AI tutors for every personal tutors for every child.
+
+866
+00:49:04,680 --> 00:49:06,280
+That's already happening.
+
+867
+00:49:06,600 --> 00:49:11,600
+So there's a set of services that'll be free.
+
+868
+00:49:12,140 --> 00:49:14,140
+There's some hard knots to crack.
+
+869
+00:49:14,140 --> 00:49:15,880
+Housing is the hard one.
+
+870
+00:49:17,080 --> 00:49:21,280
+For people in the bottom half of the US population,
+
+871
+00:49:21,280 --> 00:49:24,200
+they spend 40 some percent of their income
+
+872
+00:49:24,200 --> 00:49:25,580
+on housing and food.
+
+873
+00:49:26,580 --> 00:49:27,780
+So there's some hard knots,
+
+874
+00:49:27,780 --> 00:49:29,780
+but I do think both are addressable
+
+875
+00:49:29,780 --> 00:49:32,840
+by robotics and better approaches.
+
+876
+00:49:32,840 --> 00:49:35,180
+Well, this has been a very interesting conversation.
+
+877
+00:49:35,180 --> 00:49:36,840
+I'm excited to see where things are headed.
+
+878
+00:49:36,840 --> 00:49:39,600
+Thank you both for joining us here on the podcast.
+
+879
+00:49:39,600 --> 00:49:40,980
+Thank you. Thank you.
+

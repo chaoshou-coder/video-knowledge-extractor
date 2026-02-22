@@ -47,6 +47,7 @@ temp/
 .env
 .env.local
 .env.*.local
+.cursor/
 
 # API Keys and secrets (just in case)
 *api_key*
@@ -64,10 +65,14 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+exports*/
+*.venv/
+scripts/
 
 # Local config
 config.local.yaml
 config.local.json
+config.toml
 
 # macOS
 .DS_Store
