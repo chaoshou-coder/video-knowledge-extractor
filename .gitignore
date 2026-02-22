@@ -67,7 +67,6 @@ logs/
 htmlcov/
 exports*/
 *.venv/
-scripts/
 
 # Local config
 config.local.yaml

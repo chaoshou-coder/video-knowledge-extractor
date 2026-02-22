@@ -1,3 +1,0 @@
-tkinter
-requests>=2.28.0
-pyinstaller

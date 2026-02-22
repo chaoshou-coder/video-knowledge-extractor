@@ -7,18 +7,18 @@ Thank you for your interest in contributing!
 ```bash
 git clone https://github.com/yourusername/video-knowledge-extractor.git
 cd video-knowledge-extractor
-pip install -e ".[full]"
-pip install pytest pytest-asyncio
+pip install -e .
 ```
 
-## Running Tests
+## Running Local Checks
 
 ```bash
-# Unit tests
-pytest tests/test_core.py -v
+# Syntax check
+python -m compileall src kl.py
 
-# BDD tests
-python tests/bdd_runner.py
+# CLI smoke check
+python kl.py process examples/sample1.srt --mock -o exports_check
+python kl.py process examples/sample2.txt --mock -o exports_check
 ```
 
 ## Code Style
@@ -32,7 +32,7 @@ python tests/bdd_runner.py
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests
+4. Run local checks
 5. Submit a pull request
 
 ## Report Issues

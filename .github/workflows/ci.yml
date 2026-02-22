@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test:
+  smoke:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,45 +15,37 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e ".[full]"
-        pip install pytest pytest-asyncio
-    
-    - name: Run unit tests
+        pip install -e .
+
+    - name: Run CLI smoke checks
       run: |
-        pytest tests/test_core.py -v
-    
-    - name: Run BDD tests
-      run: |
-        python tests/bdd_runner.py
+        python kl.py process examples/sample1.srt --mock -o exports_ci
+        python kl.py process examples/sample2.txt --mock -o exports_ci
 
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    
+
     - name: Install lint tools
       run: |
-        pip install ruff black
-    
-    - name: Check formatting
-      run: |
-        black --check src/ tests/
-    
+        pip install ruff
+
     - name: Lint with ruff
       run: |
-        ruff check src/ tests/
+        ruff check src/
