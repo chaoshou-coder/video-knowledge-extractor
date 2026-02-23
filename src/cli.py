@@ -5,7 +5,9 @@ CLI - 命令行接口（命令模式 + Wizard 模式）
 from __future__ import annotations
 
 import asyncio
+import signal
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -111,15 +113,27 @@ async def _run_batch_pipeline(
     build: bool,
     export_format: str,
     output_dir: str,
+    stop_event: threading.Event | None = None,
 ) -> Dict[str, object]:
     processor = ParallelProcessor(engine, max_workers=workers)
 
     click.echo("阶段 1: 处理文档...")
-    docs = await processor.process_directory(directory)
+    docs = await processor.process_directory(directory, stop_event=stop_event)
     click.echo(f"完成: {len(docs)} 个文件")
 
     total_points = sum(len(doc.knowledge_points) for doc in docs)
-    result: Dict[str, object] = {"docs": docs, "total_points": total_points, "exports": []}
+    result: Dict[str, object] = {
+        "docs": docs,
+        "total_points": total_points,
+        "exports": [],
+        "interrupted": processor.interrupted,
+        "skipped_files": processor.skipped_due_interrupt,
+        "total_files": processor.total_files,
+    }
+
+    if processor.interrupted:
+        click.echo("检测到中断信号：已完成当前进行中的任务，停止继续处理剩余文件。")
+        return result
 
     if not build:
         return result
@@ -251,19 +265,43 @@ def _run_batch_flow(
         if providers:
             _print_provider_summary(providers)
 
-    result = asyncio.run(
-        _run_batch_pipeline(
-            engine=engine,
-            llm_client=llm_client,
-            directory=directory,
-            workers=workers,
-            build=build,
-            export_format=export_format,
-            output_dir=output_dir,
+    stop_event = threading.Event()
+    previous_sigint_handler = signal.getsignal(signal.SIGINT)
+
+    def _sigint_handler(_signum: int, _frame: object) -> None:
+        if stop_event.is_set():
+            raise KeyboardInterrupt
+        stop_event.set()
+        click.echo("\n收到中断信号：将等待当前任务完成后退出（不再启动新任务）。")
+
+    signal.signal(signal.SIGINT, _sigint_handler)
+    try:
+        result = asyncio.run(
+            _run_batch_pipeline(
+                engine=engine,
+                llm_client=llm_client,
+                directory=directory,
+                workers=workers,
+                build=build,
+                export_format=export_format,
+                output_dir=output_dir,
+                stop_event=stop_event,
+            )
         )
-    )
+    except KeyboardInterrupt:
+        click.echo("\n检测到重复中断，已立即退出。")
+        return
+    finally:
+        signal.signal(signal.SIGINT, previous_sigint_handler)
 
     click.echo(f"\n总知识点: {result['total_points']} 个")
+    if result.get("interrupted"):
+        total_files = int(result.get("total_files", 0))
+        skipped_files = int(result.get("skipped_files", 0))
+        completed_files = len(result.get("docs", []))
+        click.echo(
+            f"按中断请求退出：完成 {completed_files}/{total_files} 个文件，跳过 {skipped_files} 个文件。"
+        )
     if build:
         exports = result.get("exports", [])
         if exports:
