@@ -6,6 +6,7 @@ import asyncio
 import json
 import re
 import sqlite3
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from time import perf_counter
@@ -13,6 +14,8 @@ from typing import Any, Dict, List, Optional, Protocol
 
 from .llm_provider import ProviderRegistry
 from .srt_parser import SRTParser
+
+_PRINT_LOCK = threading.Lock()
 
 
 class TextGenerator(Protocol):
@@ -67,6 +70,16 @@ class TextChunk:
     start_line: int
     end_line: int
     segment_index: int
+
+
+class DocumentProcessingError(RuntimeError):
+    """单文件处理失败（携带阶段信息）"""
+
+    def __init__(self, file_path: Path, stage: str, detail: str):
+        self.file_path = str(file_path)
+        self.stage = stage
+        self.detail = detail
+        super().__init__(f"[{stage}] {file_path.name}: {detail}")
 
 
 class ProgressTracker:
@@ -328,6 +341,37 @@ class WorkflowEngine:
             self.cleaned_output_dir = self.output_dir
             self.structured_output_dir = self.output_dir
 
+    @staticmethod
+    def _stage_label(stage: str) -> str:
+        stage_map = {
+            "rule_cleaning": "规则清理",
+            "semantic_segmentation": "语义分段",
+            "sub_chunking": "子切分",
+            "noise_reduction": "清洗",
+            "structuring": "结构化",
+            "video_marking": "视频标记",
+            "video_marking_skipped": "视频标记",
+            "unknown": "未知阶段",
+        }
+        return stage_map.get(stage, stage)
+
+    def _log(self, doc_path: Path, message: str) -> None:
+        with _PRINT_LOCK:
+            print(f"[{doc_path.name}] {message}")
+
+    def _stage_done(self, doc_path: Path, stage: str, elapsed: float) -> None:
+        label = self._stage_label(stage)
+        self._log(doc_path, f"{label}已完成 ({elapsed:.2f}s)")
+
+    def _mark_failed(
+        self, doc_id: int, doc_path: Path, stage: str, exc: Exception | str
+    ) -> None:
+        detail = str(exc)
+        label = self._stage_label(stage)
+        self._log(doc_path, f"{label}失败: {detail}")
+        self.tracker.update_status(doc_id, "failed", stage, detail)
+        raise DocumentProcessingError(doc_path, stage, detail)
+
     async def process_document(self, doc_path: Path) -> Document:
         """处理单个文档并输出清洗/结构化两份结果"""
         total_started = perf_counter()
@@ -336,68 +380,98 @@ class WorkflowEngine:
         doc = Document(path=doc_path, content=self._load_document_content(doc_path))
         processed_chars = len(doc.content)
 
-        self.tracker.update_status(doc_id, "processing", "rule_cleaning")
-        stage_started = perf_counter()
-        doc.content = self.cleaner.clean(doc.content)
-        stage_durations["rule_cleaning"] = perf_counter() - stage_started
-
-        self.tracker.update_status(doc_id, "processing", "semantic_segmentation")
-        stage_started = perf_counter()
-        semantic_segments = await self._stage_semantic_segmentation(doc.content)
-        stage_durations["semantic_segmentation"] = perf_counter() - stage_started
-
-        self.tracker.update_status(doc_id, "processing", "sub_chunking")
-        stage_started = perf_counter()
-        chunks = await self._stage_sub_chunk(semantic_segments)
-        stage_durations["sub_chunking"] = perf_counter() - stage_started
-
-        self.tracker.update_status(doc_id, "processing", "noise_reduction")
-        stage_started = perf_counter()
-        cleaned_chunks = await self._stage_noise_reduction(chunks)
-        stage_durations["noise_reduction"] = perf_counter() - stage_started
-        doc.content = "\n\n".join(chunk.content for chunk in cleaned_chunks).strip()
-
-        cleaned_output = self._save_cleaned_markdown(doc.path, semantic_segments, cleaned_chunks)
-
-        self.tracker.update_status(doc_id, "processing", "structuring")
-        stage_started = perf_counter()
-        doc.knowledge_points = await self._stage_structure(cleaned_chunks, doc.path)
-        stage_durations["structuring"] = perf_counter() - stage_started
-        structured_output = self._save_structured_markdown(
-            doc.path, doc.knowledge_points, cleaned_chunks
-        )
-
-        if self.enable_video_mark:
-            self.tracker.update_status(doc_id, "processing", "video_marking")
+        try:
+            self.tracker.update_status(doc_id, "processing", "rule_cleaning")
             stage_started = perf_counter()
-            doc = await self._stage_video_mark(doc)
-            stage_durations["video_marking"] = perf_counter() - stage_started
-        else:
-            self.tracker.update_status(doc_id, "processing", "video_marking_skipped")
-            stage_durations["video_marking"] = 0.0
+            doc.content = self.cleaner.clean(doc.content)
+            stage_durations["rule_cleaning"] = perf_counter() - stage_started
+            self._stage_done(doc_path, "rule_cleaning", stage_durations["rule_cleaning"])
 
-        doc.metadata["chunk_size"] = self.chunk_size
-        doc.metadata["semantic_segments"] = [
-            {
-                "title": segment.title,
-                "start_line": segment.start_line,
-                "end_line": segment.end_line,
-            }
-            for segment in semantic_segments
-        ]
-        doc.metadata["chunk_count"] = len(cleaned_chunks)
-        doc.metadata["cleaned_output"] = str(cleaned_output)
-        doc.metadata["structured_output"] = str(structured_output)
-        doc.metadata["processed_chars"] = processed_chars
-        doc.metadata["extracted_chars"] = sum(len(point.content) for point in doc.knowledge_points)
-        doc.metadata["stage_durations"] = stage_durations
-        doc.metadata["total_duration"] = perf_counter() - total_started
+            self.tracker.update_status(doc_id, "processing", "semantic_segmentation")
+            stage_started = perf_counter()
+            try:
+                semantic_segments = await self._stage_semantic_segmentation(doc.content)
+            except Exception as exc:
+                self._mark_failed(doc_id, doc_path, "semantic_segmentation", exc)
+            stage_durations["semantic_segmentation"] = perf_counter() - stage_started
+            self._stage_done(
+                doc_path,
+                "semantic_segmentation",
+                stage_durations["semantic_segmentation"],
+            )
 
-        self.tracker.update_status(doc_id, "done", "completed")
-        for point in doc.knowledge_points:
-            self.tracker.save_knowledge_point(doc_id, point)
+            self.tracker.update_status(doc_id, "processing", "sub_chunking")
+            stage_started = perf_counter()
+            chunks = await self._stage_sub_chunk(semantic_segments)
+            stage_durations["sub_chunking"] = perf_counter() - stage_started
+            self._stage_done(doc_path, "sub_chunking", stage_durations["sub_chunking"])
 
-        return doc
+            self.tracker.update_status(doc_id, "processing", "noise_reduction")
+            stage_started = perf_counter()
+            try:
+                cleaned_chunks = await self._stage_noise_reduction(chunks, doc.path)
+            except Exception as exc:
+                self._mark_failed(doc_id, doc_path, "noise_reduction", exc)
+            stage_durations["noise_reduction"] = perf_counter() - stage_started
+            doc.content = "\n\n".join(chunk.content for chunk in cleaned_chunks).strip()
+            self._stage_done(doc_path, "noise_reduction", stage_durations["noise_reduction"])
+
+            cleaned_output = self._save_cleaned_markdown(
+                doc.path, semantic_segments, cleaned_chunks
+            )
+
+            self.tracker.update_status(doc_id, "processing", "structuring")
+            stage_started = perf_counter()
+            try:
+                doc.knowledge_points = await self._stage_structure(cleaned_chunks, doc.path)
+            except Exception as exc:
+                self._mark_failed(doc_id, doc_path, "structuring", exc)
+            stage_durations["structuring"] = perf_counter() - stage_started
+            structured_output = self._save_structured_markdown(
+                doc.path, doc.knowledge_points, cleaned_chunks
+            )
+            self._stage_done(doc_path, "structuring", stage_durations["structuring"])
+
+            if self.enable_video_mark:
+                self.tracker.update_status(doc_id, "processing", "video_marking")
+                stage_started = perf_counter()
+                try:
+                    doc = await self._stage_video_mark(doc, doc.path)
+                except Exception as exc:
+                    self._mark_failed(doc_id, doc_path, "video_marking", exc)
+                stage_durations["video_marking"] = perf_counter() - stage_started
+                self._stage_done(doc_path, "video_marking", stage_durations["video_marking"])
+            else:
+                self.tracker.update_status(doc_id, "processing", "video_marking_skipped")
+                stage_durations["video_marking"] = 0.0
+
+            doc.metadata["chunk_size"] = self.chunk_size
+            doc.metadata["semantic_segments"] = [
+                {
+                    "title": segment.title,
+                    "start_line": segment.start_line,
+                    "end_line": segment.end_line,
+                }
+                for segment in semantic_segments
+            ]
+            doc.metadata["chunk_count"] = len(cleaned_chunks)
+            doc.metadata["cleaned_output"] = str(cleaned_output)
+            doc.metadata["structured_output"] = str(structured_output)
+            doc.metadata["processed_chars"] = processed_chars
+            doc.metadata["extracted_chars"] = sum(
+                len(point.content) for point in doc.knowledge_points
+            )
+            doc.metadata["stage_durations"] = stage_durations
+            doc.metadata["total_duration"] = perf_counter() - total_started
+
+            self.tracker.update_status(doc_id, "done", "completed")
+            for point in doc.knowledge_points:
+                self.tracker.save_knowledge_point(doc_id, point)
+            return doc
+        except DocumentProcessingError:
+            raise
+        except Exception as exc:
+            self._mark_failed(doc_id, doc_path, "unknown", exc)
 
     def _load_document_content(self, doc_path: Path) -> str:
         text = doc_path.read_text(encoding="utf-8")
@@ -439,49 +513,31 @@ class WorkflowEngine:
   ]
 }}
 """
-        try:
-            result = await self.llm.generate(prompt, temperature=0.1)
-            data = self._parse_json_response(result)
-            raw_segments = data.get("segments", [])
-            normalized = self._normalize_segments(raw_segments, len(lines))
-            if not normalized:
-                return [
-                    SemanticSegment(
-                        title="全文",
-                        start_line=1,
-                        end_line=len(lines),
-                        content="\n".join(lines),
-                    )
-                ]
+        result = await self.llm.generate(prompt, temperature=0.1)
+        data = self._parse_json_response(result)
+        raw_segments = data.get("segments", [])
+        normalized = self._normalize_segments(raw_segments, len(lines))
+        if not normalized:
+            raise RuntimeError("语义分段结果为空或格式无效")
 
-            segments: List[SemanticSegment] = []
-            for item in normalized:
-                start_line = item["start_line"]
-                end_line = item["end_line"]
-                content = "\n".join(lines[start_line - 1 : end_line]).strip()
-                if not content:
-                    continue
-                segments.append(
-                    SemanticSegment(
-                        title=item["title"],
-                        start_line=start_line,
-                        end_line=end_line,
-                        content=content,
-                    )
+        segments: List[SemanticSegment] = []
+        for item in normalized:
+            start_line = item["start_line"]
+            end_line = item["end_line"]
+            content = "\n".join(lines[start_line - 1 : end_line]).strip()
+            if not content:
+                continue
+            segments.append(
+                SemanticSegment(
+                    title=item["title"],
+                    start_line=start_line,
+                    end_line=end_line,
+                    content=content,
                 )
-            if segments:
-                return segments
-        except Exception as exc:
-            print(f"语义分段失败，回退为单段: {exc}")
-
-        return [
-            SemanticSegment(
-                title="全文",
-                start_line=1,
-                end_line=len(lines),
-                content="\n".join(lines),
             )
-        ]
+        if not segments:
+            raise RuntimeError("语义分段无法构建有效内容")
+        return segments
 
     def _normalize_segments(
         self, raw_segments: Any, total_lines: int
@@ -661,24 +717,11 @@ class WorkflowEngine:
             chunks.append(current)
         return chunks
 
-    async def _stage_noise_reduction(self, chunks: List[TextChunk]) -> List[TextChunk]:
+    async def _stage_noise_reduction(
+        self, chunks: List[TextChunk], source_path: Path
+    ) -> List[TextChunk]:
         if not chunks:
             return []
-
-        semaphore = asyncio.Semaphore(4)
-        progress_lock = asyncio.Lock()
-        total = len(chunks)
-        progress = {"done": 0}
-
-        async def _tick() -> None:
-            async with progress_lock:
-                progress["done"] += 1
-                done = progress["done"]
-                msg = f"清洗 {done}/{total} 块..."
-                if done < total:
-                    print(f"\r{msg}", end="", flush=True)
-                else:
-                    print(f"\r{msg}")
 
         async def _clean_chunk(index: int, chunk: TextChunk) -> TextChunk:
             prompt = f"""清洗任务：
@@ -693,8 +736,7 @@ class WorkflowEngine:
 {chunk.content}
 """
             try:
-                async with semaphore:
-                    cleaned = await self.llm.generate(prompt, temperature=0.1)
+                cleaned = await self.llm.generate(prompt, temperature=0.1)
                 cleaned = cleaned.strip()
                 if not cleaned or len(cleaned) < int(len(chunk.content) * 0.35):
                     cleaned = chunk.content
@@ -706,10 +748,9 @@ class WorkflowEngine:
                     segment_index=chunk.segment_index,
                 )
             except Exception as exc:
-                print(f"\n清洗分块失败 ({index + 1}/{total}): {exc}")
-                return chunk
-            finally:
-                await _tick()
+                raise RuntimeError(
+                    f"清洗分块失败 ({index + 1}/{len(chunks)}): {exc}"
+                ) from exc
 
         return await asyncio.gather(
             *[_clean_chunk(index, chunk) for index, chunk in enumerate(chunks)]
@@ -719,22 +760,7 @@ class WorkflowEngine:
         self, cleaned_chunks: List[TextChunk], source_path: Path
     ) -> List[KnowledgePoint]:
         if not cleaned_chunks:
-            return [KnowledgePoint(title="内容摘要", content="", source_file=str(source_path))]
-
-        semaphore = asyncio.Semaphore(4)
-        progress_lock = asyncio.Lock()
-        total = len(cleaned_chunks)
-        progress = {"done": 0}
-
-        async def _tick() -> None:
-            async with progress_lock:
-                progress["done"] += 1
-                done = progress["done"]
-                msg = f"结构化 {done}/{total} 块..."
-                if done < total:
-                    print(f"\r{msg}", end="", flush=True)
-                else:
-                    print(f"\r{msg}")
+            raise RuntimeError("结构化输入为空")
 
         async def _extract_chunk(index: int, chunk: TextChunk) -> List[KnowledgePoint]:
             prompt = f"""结构化提取任务：
@@ -766,8 +792,7 @@ few-shot 示例：
 {chunk.content}
 """
             try:
-                async with semaphore:
-                    result = await self.llm.generate(prompt, temperature=0.2)
+                result = await self.llm.generate(prompt, temperature=0.2)
                 data = self._parse_json_response(result)
                 raw_points = (
                     data.get("points")
@@ -792,10 +817,9 @@ few-shot 示例：
                     )
                 return parsed
             except Exception as exc:
-                print(f"\n结构化分块失败 ({index + 1}/{total}): {exc}")
-                return []
-            finally:
-                await _tick()
+                raise RuntimeError(
+                    f"结构化分块失败 ({index + 1}/{len(cleaned_chunks)}): {exc}"
+                ) from exc
 
         chunk_results = await asyncio.gather(
             *[_extract_chunk(i, chunk) for i, chunk in enumerate(cleaned_chunks)]
@@ -811,13 +835,7 @@ few-shot 示例：
                 merged_points.append(point)
 
         if not merged_points:
-            merged_points = [
-                KnowledgePoint(
-                    title="内容摘要",
-                    content="\n\n".join(chunk.content for chunk in cleaned_chunks)[:1000],
-                    source_file=str(source_path),
-                )
-            ]
+            raise RuntimeError("结构化结果为空，未提取到有效知识点")
         return merged_points
 
     def _save_cleaned_markdown(
@@ -884,7 +902,10 @@ few-shot 示例：
         out_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")
         return out_path
 
-    async def _stage_video_mark(self, doc: Document) -> Document:
+    async def _stage_video_mark(self, doc: Document, source_path: Path) -> Document:
+        if not doc.knowledge_points:
+            return doc
+
         for point in doc.knowledge_points:
             prompt = f"""分析以下知识点内容，判断是否需要配合视频画面才能理解：
 
@@ -903,7 +924,7 @@ few-shot 示例：
                 point.content = marked_content
                 point.video_markers = self._extract_video_markers(marked_content)
             except Exception as exc:
-                print(f"视频标记失败: {exc}")
+                raise RuntimeError(f"视频标记失败 ({point.title}): {exc}") from exc
         return doc
 
     def _extract_video_markers(self, text: str) -> List[Dict[str, str]]:

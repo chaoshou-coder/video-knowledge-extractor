@@ -7,7 +7,7 @@ import json
 import logging
 import re
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import Any, Dict, List
 
 from .workflow import KnowledgePoint
 
@@ -367,6 +367,7 @@ class CrossDocumentClusteringSkill:
         self, structure: CourseStructure, all_points: List[KnowledgePoint]
     ):
         """将知识点关联到章节"""
+        assigned_indices: set[int] = set()
         for chapter in structure.chapters:
             topic_ids = chapter.get("topic_ids", [])
             chapter_point_indices = set()
@@ -384,6 +385,145 @@ class CrossDocumentClusteringSkill:
             ]
 
             chapter["point_count"] = len(chapter["points"])
+            assigned_indices.update(chapter_point_indices)
+
+        # 当章节 topic_ids 与主题 ID 大面积不匹配时，按主题均衡回填，避免大部分知识点落入兜底章节。
+        if structure.chapters and structure.topics:
+            unmatched_ratio = 1.0
+            if all_points:
+                unmatched_ratio = 1.0 - (len(assigned_indices) / len(all_points))
+            if unmatched_ratio > 0.5:
+                self._fallback_assign_topics_evenly(structure, all_points, assigned_indices)
+
+        unassigned_indices = [
+            i for i in range(len(all_points)) if i not in assigned_indices
+        ]
+        if unassigned_indices:
+            self._fallback_assign_unassigned_points(structure, all_points, unassigned_indices)
+
+        for chapter in structure.chapters:
+            chapter["point_count"] = len(chapter.get("points", []))
+            if chapter["point_count"] == 0:
+                logger.warning(f"章节未分配到知识点: {chapter.get('title', '未命名章节')}")
+
+    def _fallback_assign_topics_evenly(
+        self,
+        structure: CourseStructure,
+        all_points: List[KnowledgePoint],
+        assigned_indices: set[int],
+    ) -> None:
+        if not structure.chapters:
+            return
+
+        chapter_indices = [set() for _ in structure.chapters]
+        point_index_map = {id(point): idx for idx, point in enumerate(all_points)}
+        for chapter_idx, chapter in enumerate(structure.chapters):
+            existing_points = chapter.get("points", [])
+            if not isinstance(existing_points, list):
+                continue
+            for point in existing_points:
+                idx = point_index_map.get(id(point))
+                if idx is not None:
+                    chapter_indices[chapter_idx].add(idx)
+                    assigned_indices.add(idx)
+
+        chapter_cursor = 0
+        for topic in structure.topics:
+            target_idx = chapter_cursor % len(structure.chapters)
+            chapter_cursor += 1
+            for point_idx in topic.point_indices:
+                if point_idx in assigned_indices:
+                    continue
+                if 0 <= point_idx < len(all_points):
+                    chapter_indices[target_idx].add(point_idx)
+                    assigned_indices.add(point_idx)
+
+        for chapter_idx, chapter in enumerate(structure.chapters):
+            idxs = sorted(chapter_indices[chapter_idx])
+            chapter["points"] = [all_points[i] for i in idxs]
+
+    def _fallback_assign_unassigned_points(
+        self,
+        structure: CourseStructure,
+        all_points: List[KnowledgePoint],
+        unassigned_indices: List[int],
+    ) -> None:
+        chapter_profiles: List[Dict[str, Any]] = []
+        for idx, chapter in enumerate(structure.chapters):
+            topic_ids = chapter.get("topic_ids", [])
+            related_topics = [t for t in structure.topics if t.id in topic_ids]
+            text_parts = [
+                str(chapter.get("title", "")),
+                str(chapter.get("description", "")),
+                " ".join(str(obj) for obj in chapter.get("learning_objectives", [])),
+                " ".join(topic.title for topic in related_topics),
+                " ".join(" ".join(topic.keywords) for topic in related_topics),
+            ]
+            chapter_profiles.append(
+                {
+                    "index": idx,
+                    "tokens": self._extract_tokens(" ".join(text_parts)),
+                }
+            )
+        chapter_point_counts = [
+            len(chapter.get("points", [])) for chapter in structure.chapters
+        ]
+
+        fallback_points: List[KnowledgePoint] = []
+        for point_idx in unassigned_indices:
+            point = all_points[point_idx]
+            point_tokens = self._extract_tokens(f"{point.title}\n{point.content[:500]}")
+            best_idx = -1
+            best_score = 0
+            for profile in chapter_profiles:
+                score = len(point_tokens.intersection(profile["tokens"]))
+                if score > best_score:
+                    best_score = score
+                    best_idx = int(profile["index"])
+
+            if best_idx >= 0 and best_score > 0:
+                structure.chapters[best_idx].setdefault("points", []).append(point)
+                chapter_point_counts[best_idx] += 1
+            else:
+                if structure.chapters:
+                    target_idx = min(
+                        range(len(structure.chapters)),
+                        key=lambda idx: chapter_point_counts[idx],
+                    )
+                    structure.chapters[target_idx].setdefault("points", []).append(point)
+                    chapter_point_counts[target_idx] += 1
+                else:
+                    fallback_points.append(point)
+
+        if fallback_points:
+            max_order = 0
+            for chapter in structure.chapters:
+                try:
+                    max_order = max(max_order, int(chapter.get("order", 0)))
+                except (TypeError, ValueError):
+                    continue
+            fallback_chapter = {
+                "order": max_order + 1,
+                "title": "其他知识点",
+                "topic_ids": [],
+                "description": "自动收纳未匹配章节的知识点",
+                "learning_objectives": [],
+                "points": fallback_points,
+                "point_count": len(fallback_points),
+            }
+            structure.chapters.append(fallback_chapter)
+            logger.warning(f"新增兜底章节，收纳 {len(fallback_points)} 个未匹配知识点")
+
+    def _extract_tokens(self, text: str) -> set[str]:
+        if not text:
+            return set()
+        tokens = set(
+            re.findall(
+                r"[\u4e00-\u9fff]{2,}|[A-Za-z][A-Za-z0-9_]{1,}|[0-9]{2,}",
+                text.lower(),
+            )
+        )
+        return {token for token in tokens if len(token.strip()) >= 2}
 
     def _parse_json_response(self, text: str) -> Dict:
         """解析 LLM 返回的 JSON"""

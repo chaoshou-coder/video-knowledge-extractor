@@ -122,8 +122,31 @@ class ModelConfig:
 class LLMProvider:
     """统一异步 LLM 客户端（OpenAI Chat Completions 兼容）"""
 
-    def __init__(self, config: ModelConfig):
+    RETRYABLE_STATUS_CODES = {429, 500, 502, 503}
+
+    def __init__(
+        self,
+        config: ModelConfig,
+        max_retries: int = 3,
+        llm_semaphore: asyncio.Semaphore | None = None,
+    ):
         self.config = config
+        self.max_retries = max(0, int(max_retries))
+        self._llm_semaphore = llm_semaphore
+        timeout = httpx.Timeout(self.config.timeout)
+        limits = httpx.Limits(max_keepalive_connections=20, max_connections=100)
+        self._client = httpx.AsyncClient(timeout=timeout, limits=limits)
+
+    async def close(self) -> None:
+        await self._client.aclose()
+
+    async def _post_chat(
+        self, url: str, headers: Dict[str, str], payload: Dict[str, Any]
+    ) -> httpx.Response:
+        if self._llm_semaphore is None:
+            return await self._client.post(url, headers=headers, json=payload)
+        async with self._llm_semaphore:
+            return await self._client.post(url, headers=headers, json=payload)
 
     async def generate(
         self,
@@ -188,40 +211,49 @@ class LLMProvider:
         if extra_payload:
             payload.update(extra_payload)
 
-        timeout = httpx.Timeout(self.config.timeout)
-        retries = 2
         body: Dict[str, Any] | None = None
         last_err: Exception | None = None
 
-        async with httpx.AsyncClient(timeout=timeout) as client:
-            for attempt in range(retries + 1):
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = await self._post_chat(
+                    f"{self.config.api_base}/chat/completions",
+                    headers=headers,
+                    payload=payload,
+                )
+                response.raise_for_status()
+                body = response.json()
+                break
+            except httpx.HTTPStatusError as exc:
+                status_code = exc.response.status_code
+                resp_text = ""
                 try:
-                    response = await client.post(
-                        f"{self.config.api_base}/chat/completions",
-                        headers=headers,
-                        json=payload,
-                    )
-                    response.raise_for_status()
-                    body = response.json()
+                    resp_text = exc.response.text[:500]
+                except Exception:
+                    resp_text = "<无法读取响应体>"
+                if (
+                    status_code in self.RETRYABLE_STATUS_CODES
+                    and attempt < self.max_retries
+                ):
+                    await asyncio.sleep(min(4.0, 0.8 * (attempt + 1)))
+                    continue
+                raise RuntimeError(
+                    f"LLM HTTP {status_code} ({self.config.api_base}, model={self.config.model}): {resp_text}"
+                ) from exc
+            except (
+                httpx.ReadError,
+                httpx.RemoteProtocolError,
+                httpx.ReadTimeout,
+                httpx.ConnectError,
+            ) as exc:
+                last_err = exc
+                if attempt >= self.max_retries:
                     break
-                except httpx.HTTPStatusError as exc:
-                    resp_text = ""
-                    try:
-                        resp_text = exc.response.text[:500]
-                    except Exception:
-                        resp_text = "<无法读取响应体>"
-                    raise RuntimeError(
-                        f"LLM HTTP {exc.response.status_code} ({self.config.api_base}, model={self.config.model}): {resp_text}"
-                    ) from exc
-                except (httpx.ReadError, httpx.RemoteProtocolError, httpx.ReadTimeout) as exc:
-                    last_err = exc
-                    if attempt >= retries:
-                        break
-                    await asyncio.sleep(0.8 * (attempt + 1))
-                except Exception as exc:
-                    raise RuntimeError(
-                        f"LLM 调用失败 ({self.config.api_base}, model={self.config.model}): {exc}"
-                    ) from exc
+                await asyncio.sleep(min(4.0, 0.8 * (attempt + 1)))
+            except Exception as exc:
+                raise RuntimeError(
+                    f"LLM 调用失败 ({self.config.api_base}, model={self.config.model}): {exc}"
+                ) from exc
 
         if body is None:
             raise RuntimeError(
@@ -251,12 +283,23 @@ class LLMProvider:
 class ProviderRegistry:
     """单模型配置容器（保留 Registry 名称以兼容调用方）"""
 
-    def __init__(self, provider: LLMProvider, chunk_size: int = 60000):
+    def __init__(
+        self,
+        provider: LLMProvider,
+        chunk_size: int = 60000,
+        max_retries: int = 3,
+        max_llm_concurrency: int = 8,
+    ):
         self._provider = provider
         self.chunk_size = max(1000, int(chunk_size))
+        self.max_retries = max(0, int(max_retries))
+        self.max_llm_concurrency = max(1, int(max_llm_concurrency))
 
     def get(self) -> LLMProvider:
         return self._provider
+
+    async def close(self) -> None:
+        await self._provider.close()
 
     def summary(self) -> Dict[str, Any]:
         return {
@@ -271,6 +314,8 @@ class ProviderRegistry:
             "provider_zdr": self._provider.config.provider_zdr,
             "provider_sort": self._provider.config.provider_sort,
             "chunk_size": self.chunk_size,
+            "max_retries": self.max_retries,
+            "max_llm_concurrency": self.max_llm_concurrency,
         }
 
     @classmethod
@@ -289,9 +334,34 @@ class ProviderRegistry:
         if not isinstance(processing_data, dict):
             processing_data = {}
         chunk_size_raw = processing_data.get("chunk_size", 60000)
+        max_retries_raw = processing_data.get("max_retries", 3)
+        max_llm_concurrency_raw = processing_data.get("max_llm_concurrency", 8)
         try:
             chunk_size = int(chunk_size_raw)
         except (TypeError, ValueError) as exc:
             raise ValueError("processing.chunk_size 必须为整数") from exc
+        try:
+            max_retries = int(max_retries_raw)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("processing.max_retries 必须为整数") from exc
+        try:
+            max_llm_concurrency = int(max_llm_concurrency_raw)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("processing.max_llm_concurrency 必须为整数") from exc
+        if max_llm_concurrency < 1:
+            raise ValueError("processing.max_llm_concurrency 必须 >= 1")
+        if max_retries < 0:
+            raise ValueError("processing.max_retries 必须 >= 0")
 
-        return cls(LLMProvider(config=config), chunk_size=chunk_size)
+        llm_semaphore = asyncio.Semaphore(max_llm_concurrency)
+        provider = LLMProvider(
+            config=config,
+            max_retries=max_retries,
+            llm_semaphore=llm_semaphore,
+        )
+        return cls(
+            provider=provider,
+            chunk_size=chunk_size,
+            max_retries=max_retries,
+            max_llm_concurrency=max_llm_concurrency,
+        )

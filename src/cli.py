@@ -5,11 +5,13 @@ CLI - 命令行接口（命令模式 + Wizard 模式）
 from __future__ import annotations
 
 import asyncio
+import json
 import signal
 import sqlite3
 import threading
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import click
 
@@ -19,7 +21,7 @@ from .fusion import KnowledgeFusionSkill
 from .llm_provider import ProviderRegistry
 from .parallel import ParallelProcessor
 from .srt_parser import SRTParser
-from .workflow import MockLLMClient, ProgressTracker, WorkflowEngine
+from .workflow import KnowledgePoint, MockLLMClient, ProgressTracker, WorkflowEngine
 
 try:
     import tomllib  # Python 3.11+
@@ -103,6 +105,106 @@ def _print_provider_summary(providers: ProviderRegistry) -> None:
         click.echo(f"  - provider_zdr: {info['provider_zdr']}")
     if info.get("provider_sort") is not None:
         click.echo(f"  - provider_sort: {info['provider_sort']}")
+    click.echo(f"  - max_retries: {info['max_retries']}")
+    click.echo(f"  - max_llm_concurrency: {info['max_llm_concurrency']}")
+
+
+def _close_providers_sync(providers: Optional[ProviderRegistry]) -> None:
+    if not providers:
+        return
+    try:
+        asyncio.run(providers.close())
+    except RuntimeError as exc:
+        # 在某些解释器/平台组合下，若连接已随事件循环回收，重复关闭会抛 Event loop is closed。
+        if "Event loop is closed" not in str(exc):
+            raise
+
+
+def _load_retry_files(retry_from: Path) -> List[Path]:
+    data = json.loads(retry_from.read_text(encoding="utf-8"))
+    failed_files = data.get("failed_files", [])
+    if not isinstance(failed_files, list):
+        return []
+
+    resolved: List[Path] = []
+    seen: set[str] = set()
+    for item in failed_files:
+        if not isinstance(item, dict):
+            continue
+        path_value = str(item.get("path", "")).strip()
+        if not path_value:
+            continue
+        candidate = Path(path_value)
+        if not candidate.is_absolute():
+            candidate = (retry_from.parent / candidate).resolve()
+        if not candidate.exists():
+            continue
+        key = str(candidate)
+        if key in seen:
+            continue
+        seen.add(key)
+        resolved.append(candidate)
+    return resolved
+
+
+def _write_batch_report(
+    *,
+    output_dir: str,
+    directory: Path,
+    result: Dict[str, object],
+    retry_from: Path | None,
+) -> Path:
+    out_dir = Path(output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report_path = out_dir / "batch_report.json"
+
+    file_summaries = result.get("file_summaries", [])
+    if not isinstance(file_summaries, list):
+        file_summaries = []
+
+    completed_files: List[str] = []
+    failed_files: List[Dict[str, object]] = []
+    skipped_files: List[str] = []
+
+    for item in file_summaries:
+        if not isinstance(item, dict):
+            continue
+        status = str(item.get("status", ""))
+        path = str(item.get("path", ""))
+        if status == "ok":
+            completed_files.append(path)
+        elif status == "failed":
+            failed_files.append(
+                {
+                    "path": path,
+                    "stage": str(item.get("stage", "unknown")),
+                    "error": str(item.get("error", "")),
+                    "elapsed_sec": float(item.get("elapsed_sec", 0.0)),
+                }
+            )
+        elif status == "skipped":
+            skipped_files.append(path)
+
+    report = {
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "source_directory": str(directory),
+        "retried_from": str(retry_from) if retry_from else None,
+        "total_files": int(result.get("total_files", 0)),
+        "completed": len(completed_files),
+        "failed": len(failed_files),
+        "skipped": len(skipped_files),
+        "interrupted": bool(result.get("interrupted", False)),
+        "completed_files": completed_files,
+        "failed_files": failed_files,
+        "skipped_files": skipped_files,
+        "empty_chapters": result.get("empty_chapters", []),
+        "exports": result.get("exports", []),
+    }
+    report_path.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return report_path
 
 
 async def _run_batch_pipeline(
@@ -114,11 +216,16 @@ async def _run_batch_pipeline(
     export_format: str,
     output_dir: str,
     stop_event: threading.Event | None = None,
+    retry_files: List[Path] | None = None,
 ) -> Dict[str, object]:
     processor = ParallelProcessor(engine, max_workers=workers)
 
     click.echo("阶段 1: 处理文档...")
-    docs = await processor.process_directory(directory, stop_event=stop_event)
+    docs = await processor.process_directory(
+        directory,
+        stop_event=stop_event,
+        files=retry_files,
+    )
     click.echo(f"完成: {len(docs)} 个文件")
 
     total_points = sum(len(doc.knowledge_points) for doc in docs)
@@ -129,10 +236,16 @@ async def _run_batch_pipeline(
         "interrupted": processor.interrupted,
         "skipped_files": processor.skipped_due_interrupt,
         "total_files": processor.total_files,
+        "failed_files": processor.errors,
+        "file_summaries": processor.file_summaries,
     }
 
     if processor.interrupted:
         click.echo("检测到中断信号：已完成当前进行中的任务，停止继续处理剩余文件。")
+        return result
+
+    if not docs:
+        click.echo("没有成功处理的文件，跳过后续融合/聚类/导出。")
         return result
 
     if not build:
@@ -150,9 +263,26 @@ async def _run_batch_pipeline(
 
     click.echo("\n阶段 4: 课程聚类...")
     clustering = CrossDocumentClusteringSkill(llm_client)
-    structure = await clustering.cluster(merged_points)
+    cluster_points = [
+        KnowledgePoint(
+            title=point.title,
+            content=point.content,
+            video_markers=list(point.video_markers),
+            source_file=",".join(point.sources),
+        )
+        for point in merged_points
+    ]
+    structure = await clustering.cluster(cluster_points)
     click.echo(f"课程: {structure.name}")
     click.echo(f"章节: {len(structure.chapters)} 个")
+    empty_chapters = [
+        str(chapter.get("title", "未命名章节"))
+        for chapter in structure.chapters
+        if not chapter.get("points")
+    ]
+    if empty_chapters:
+        click.echo(f"警告: {len(empty_chapters)} 个章节未分配到知识点")
+    result["empty_chapters"] = empty_chapters
 
     click.echo("\n阶段 5: 生成衔接段落...")
     transitions = await fusion.generate_transitions(structure.chapters)
@@ -203,7 +333,18 @@ def _run_process_flow(
         if providers:
             _print_provider_summary(providers)
 
-    doc = asyncio.run(engine.process_document(file_path))
+    async def _run() -> object:
+        try:
+            return await engine.process_document(file_path)
+        finally:
+            if providers:
+                await providers.close()
+
+    try:
+        doc = asyncio.run(_run())
+    except Exception as exc:
+        raise click.ClickException(f"处理失败: {exc}") from exc
+
     processed_chars = int(doc.metadata.get("processed_chars", len(doc.content)))
     extracted_chars = int(
         doc.metadata.get(
@@ -250,6 +391,7 @@ def _run_batch_flow(
     config_path: Path,
     mock: bool,
     enable_video_mark: bool,
+    retry_from: Path | None = None,
 ) -> None:
     engine, providers, llm_client = _build_runtime(
         db_path=db_path,
@@ -265,6 +407,15 @@ def _run_batch_flow(
         if providers:
             _print_provider_summary(providers)
 
+    retry_files: List[Path] | None = None
+    if retry_from is not None:
+        retry_files = _load_retry_files(retry_from)
+        if not retry_files:
+            click.echo(f"重试报告中没有可处理的失败文件: {retry_from}")
+            _close_providers_sync(providers)
+            return
+        click.echo(f"重试模式: 根据报告仅处理 {len(retry_files)} 个失败文件")
+
     stop_event = threading.Event()
     previous_sigint_handler = signal.getsignal(signal.SIGINT)
 
@@ -274,10 +425,9 @@ def _run_batch_flow(
         stop_event.set()
         click.echo("\n收到中断信号：将等待当前任务完成后退出（不再启动新任务）。")
 
-    signal.signal(signal.SIGINT, _sigint_handler)
-    try:
-        result = asyncio.run(
-            _run_batch_pipeline(
+    async def _run() -> Dict[str, object]:
+        try:
+            return await _run_batch_pipeline(
                 engine=engine,
                 llm_client=llm_client,
                 directory=directory,
@@ -286,15 +436,43 @@ def _run_batch_flow(
                 export_format=export_format,
                 output_dir=output_dir,
                 stop_event=stop_event,
+                retry_files=retry_files,
             )
-        )
+        finally:
+            if providers:
+                await providers.close()
+
+    signal.signal(signal.SIGINT, _sigint_handler)
+    try:
+        result = asyncio.run(_run())
     except KeyboardInterrupt:
         click.echo("\n检测到重复中断，已立即退出。")
         return
+    except Exception as exc:
+        raise click.ClickException(f"批处理失败: {exc}") from exc
     finally:
         signal.signal(signal.SIGINT, previous_sigint_handler)
 
     click.echo(f"\n总知识点: {result['total_points']} 个")
+    file_summaries = result.get("file_summaries", [])
+    if isinstance(file_summaries, list) and file_summaries:
+        click.echo("\n===== 批处理汇总 =====")
+        for item in file_summaries:
+            if not isinstance(item, dict):
+                continue
+            file_name = Path(str(item.get("path", ""))).name
+            status = str(item.get("status", ""))
+            elapsed = float(item.get("elapsed_sec", 0.0))
+            if status == "ok":
+                click.echo(
+                    f"  [OK] {file_name}: {int(item.get('knowledge_points', 0))} 个知识点, {elapsed:.2f}s"
+                )
+            elif status == "failed":
+                stage = str(item.get("stage", "unknown"))
+                error = str(item.get("error", ""))
+                click.echo(f"  [FAIL] {file_name}: {stage} - {error}")
+            elif status == "skipped":
+                click.echo(f"  [SKIP] {file_name}: 收到中断请求后跳过")
     if result.get("interrupted"):
         total_files = int(result.get("total_files", 0))
         skipped_files = int(result.get("skipped_files", 0))
@@ -302,6 +480,15 @@ def _run_batch_flow(
         click.echo(
             f"按中断请求退出：完成 {completed_files}/{total_files} 个文件，跳过 {skipped_files} 个文件。"
         )
+
+    report_path = _write_batch_report(
+        output_dir=output_dir,
+        directory=directory,
+        result=result,
+        retry_from=retry_from,
+    )
+    click.echo(f"批次报告: {report_path}")
+
     if build:
         exports = result.get("exports", [])
         if exports:
@@ -447,6 +634,12 @@ def process(
     show_default=True,
     help="LLM 配置文件路径",
 )
+@click.option(
+    "--retry-from",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="从 batch_report.json 读取失败文件并重试",
+)
 @click.option("--mock", is_flag=True, help="模拟模式（不调用外部 API）")
 @click.option("--video-mark", is_flag=True, help="启用视频标记阶段")
 @click.pass_context
@@ -458,6 +651,7 @@ def batch(
     export_format: str,
     output: str,
     config: str,
+    retry_from: Path | None,
     mock: bool,
     video_mark: bool,
 ) -> None:
@@ -472,6 +666,7 @@ def batch(
         config_path=Path(config),
         mock=mock,
         enable_video_mark=video_mark,
+        retry_from=retry_from,
     )
 
 

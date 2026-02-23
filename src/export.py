@@ -13,6 +13,13 @@ class TextbookExporter:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
 
+    def _chapter_anchor(self, chapter: Dict, fallback_index: int) -> str:
+        raw_order = chapter.get("order", fallback_index + 1)
+        safe_order = str(raw_order).strip().replace(" ", "-")
+        if not safe_order:
+            safe_order = str(fallback_index + 1)
+        return f"chapter-{safe_order}"
+
     def export_markdown(
         self,
         course_name: str,
@@ -28,14 +35,16 @@ class TextbookExporter:
         lines = [f"# {course_name}", "", "## 目录", ""]
 
         # 目录
-        for ch in chapters:
-            lines.append(f"{ch['order']}. {ch['title']}")
+        for idx, ch in enumerate(chapters):
+            anchor = self._chapter_anchor(ch, idx)
+            lines.append(f"{ch['order']}. [{ch['title']}](#{anchor})")
 
         lines.extend(["", "---", ""])
 
         # 章节内容
         for i, ch in enumerate(chapters):
-            lines.extend([f"## 第{ch['order']}章 {ch['title']}", ""])
+            anchor = self._chapter_anchor(ch, i)
+            lines.extend([f'<a id="{anchor}"></a>', f"## 第{ch['order']}章 {ch['title']}", ""])
 
             # 衔接段落
             if i in transitions:
@@ -188,6 +197,8 @@ class TextbookExporter:
         .toc {{ background: #f8f9fa; padding: 20px; border-radius: 8px; }}
         .toc ul {{ list-style: none; padding-left: 0; }}
         .toc li {{ padding: 5px 0; }}
+        .toc a {{ color: #007bff; text-decoration: none; }}
+        .toc a:hover {{ text-decoration: underline; }}
         .transition {{ 
             font-style: italic; 
             color: #666; 
@@ -215,8 +226,11 @@ class TextbookExporter:
         <ul>
 """
         # 目录
-        for ch in chapters:
-            html += f'            <li>{ch["order"]}. {ch["title"]}</li>\n'
+        for idx, ch in enumerate(chapters):
+            anchor = self._chapter_anchor(ch, idx)
+            html += (
+                f'            <li><a href="#{anchor}">{ch["order"]}. {ch["title"]}</a></li>\n'
+            )
 
         html += """        </ul>
     </div>
@@ -226,8 +240,9 @@ class TextbookExporter:
 
         # 章节
         for i, ch in enumerate(chapters):
+            anchor = self._chapter_anchor(ch, i)
             html += f"""
-    <section>
+    <section id="{anchor}">
         <h2>第{ch['order']}章 {ch['title']}</h2>
 """
             # 衔接

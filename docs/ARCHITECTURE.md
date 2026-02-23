@@ -7,7 +7,8 @@
 - **单入口 CLI**：统一通过命令行运行，避免 GUI/Web 分支带来的复杂度。
 - **可自动化**：参数化命令适配脚本、CI、Agent 调用。
 - **可观测**：使用 SQLite 追踪处理状态与知识点结果。
-- **可降级**：LLM 不稳定时有回退策略，保证流程可继续。
+- **可重试**：LLM 调用支持可配置重试。
+- **可审计**：批处理生成 `batch_report.json`，便于复盘和重跑失败文件。
 
 ## 2. 运行视图
 
@@ -34,21 +35,29 @@ kl / python kl.py
 - `src/cli.py`
   - 命令定义与参数解析（Click）。
   - 组织 `process`、`batch`、`status`、`parse` 与 Wizard 交互。
+  - 负责批处理报告写入与 `--retry-from` 失败重跑。
 - `src/workflow.py`
   - 核心流水线：规则清理、语义分段、子切分、降噪、结构化提取、可选视频标记。
+  - 以“阶段完成/失败”为粒度输出日志时间线。
+  - 关键阶段失败会抛出文件级异常（不再静默生成低质量兜底内容）。
   - `ProgressTracker` 负责 SQLite 写入和状态追踪。
 - `src/llm_provider.py`
   - 加载 `config.toml`。
   - 构造统一异步 LLM 客户端（OpenAI Chat Completions 兼容接口）。
+  - 长生命周期 `httpx.AsyncClient` 连接池复用。
+  - 全局并发闸门（`max_llm_concurrency`）与可配置重试（`max_retries`）。
   - 支持 OpenRouter provider 路由参数与环境变量覆盖。
 - `src/parallel.py`
-  - 批处理并行器（`asyncio.Semaphore` 限流）。
+  - 批处理并行器（文件级并发）。
+  - 收集文件级成功/失败摘要，供批次汇总与报告输出。
 - `src/fusion.py`
   - 跨文档知识点去重与融合，生成章节衔接段落。
 - `src/clustering.py`
   - 对融合后的知识点做主题聚类与课程结构构建。
+  - 在章节分配阶段提供未匹配知识点回填策略，减少空章节。
 - `src/export.py`
   - 导出 Markdown / HTML / EPUB。
+  - Markdown/HTML 目录支持锚点超链接直达章节。
 - `src/srt_parser.py`
   - 解析标准 SRT 与时间戳 TXT。
 
@@ -97,6 +106,9 @@ kl / python kl.py
   - `<output>/structured/`
 - `--build` 额外输出：
   - 教材文件：Markdown / HTML / EPUB（取决于 `--format`）
+- 批处理附加报告：
+  - `<output>/batch_report.json`
+  - 包含成功/失败/跳过文件列表与错误信息
 
 ## 7. 配置系统
 
@@ -107,18 +119,21 @@ kl / python kl.py
   - OpenRouter 扩展项（`provider_only` 等）
 - `[processing]`
   - `chunk_size`
+  - `max_retries`
+  - `max_llm_concurrency`
 
 环境变量覆盖：
 
 - `KL_MODEL_API_KEY`：覆盖配置中的 `api_key`
 - `KL_APP_URL`、`KL_APP_NAME`：OpenRouter 请求头
 
-## 8. 错误处理与降级
+## 8. 错误处理策略
 
-- LLM 网络抖动：内置有限重试。
+- LLM 网络抖动：按配置重试（默认 3 次）。
+- 文件级失败：失败文件写入报告，批处理继续处理其他文件。
+- 失败重跑：`kl batch ... --retry-from <batch_report.json>` 仅重跑失败文件。
 - JSON 解析失败：尝试多种提取策略（代码块/裸 JSON/大括号截取）。
-- 聚类或融合失败：降级到较保守策略（例如保留原知识点）。
-- 语义分段失败：回退为“全文单段”处理。
+- 章节分配异常：触发未匹配知识点回填，避免导出空壳目录。
 
 ## 9. 扩展建议
 

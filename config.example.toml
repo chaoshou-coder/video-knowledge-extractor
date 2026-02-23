@@ -24,3 +24,7 @@ timeout = 300
 
 [processing]
 chunk_size = 60000
+# LLM 调用失败时的最大重试次数（429/5xx/网络错误）
+max_retries = 3
+# 全局 LLM 并发闸门（跨文件统一限流）
+max_llm_concurrency = 8

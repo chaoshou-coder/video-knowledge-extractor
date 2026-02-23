@@ -8,9 +8,9 @@
 
 文档导航：
 
-- 快速上手（最小投产）：[`MINIMAL_PROD_GUIDE.md`](./MINIMAL_PROD_GUIDE.md)
-- 详细使用说明：[`USAGE.md`](./USAGE.md)
-- 架构设计说明：[`ARCHITECTURE.md`](./ARCHITECTURE.md)
+- 快速上手：[`docs/MINIMAL_PROD_GUIDE.md`](./docs/MINIMAL_PROD_GUIDE.md)
+- 详细使用说明：[`docs/USAGE.md`](./docs/USAGE.md)
+- 架构设计说明：[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
 
 ---
 
@@ -91,6 +91,8 @@ timeout = 300
 
 [processing]
 chunk_size = 60000
+max_retries = 3
+max_llm_concurrency = 8
 ```
 
 环境变量：
@@ -154,6 +156,7 @@ kl batch [OPTIONS] DIRECTORY
 - `-f, --format`：导出格式 `markdown|epub|html|all`（默认 `markdown`）
 - `-o, --output`：输出目录（默认 `./exports`）
 - `--config`：LLM 配置文件（默认 `config.toml`）
+- `--retry-from`：基于上一轮 `batch_report.json` 仅重试失败文件
 - `--mock`：模拟模式，不调用外部 API
 - `--video-mark`：启用视频标记阶段
 
@@ -192,6 +195,20 @@ python kl.py
 - 清洗输出目录：`<output>/cleaned/`
 - 结构化输出目录：`<output>/structured/`
 - 如开启 `--build`，还会输出教材文件（按 `--format`）
+- 每次批处理会生成：`<output>/batch_report.json`（成功/失败/跳过明细）
+- 导出的 Markdown/HTML 目录支持超链接直达章节
+
+---
+
+## 批处理与重试
+
+- 批处理在单文件失败时不会拖垮整批：失败文件会记录到报告，其他文件继续。
+- 可用 `--retry-from` 只重跑失败文件：
+
+```bash
+kl batch examples --config config.toml --retry-from exports_prod/batch_report.json -o exports_prod_retry
+```
+- 按 `Ctrl+C` 时会停止接收新文件，等待当前正在处理的任务完成后再退出。
 
 ---
 
@@ -244,6 +261,6 @@ CI 当前执行：
 
 ## 贡献
 
-见 [`CONTRIBUTING.md`](./CONTRIBUTING.md)。
+见 [`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md)。
  
 

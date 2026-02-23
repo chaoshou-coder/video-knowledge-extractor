@@ -32,6 +32,8 @@ timeout = 300
 
 [processing]
 chunk_size = 60000
+max_retries = 3
+max_llm_concurrency = 8
 ```
 
 说明：
@@ -57,7 +59,8 @@ python kl.py batch examples --mock --build --format markdown -o exports
 - 三条命令都成功退出；
 - `exports/` 下生成 `_cleaned.md` 和 `_structured.md`；
 - batch 模式下输出落在 `exports/cleaned/` 与 `exports/structured/`；
-- 控制台显示阶段耗时、总耗时和知识点统计。
+- 生成 `exports/batch_report.json`（用于失败重跑与复盘）；
+- 控制台显示阶段完成时间线与批次汇总。
 
 ## 4) 切换真实模型运行
 
@@ -88,3 +91,4 @@ python kl.py
 - `401/403`：检查 `api_key` 是否有效，或是否被环境变量覆盖成错误值。
 - OpenRouter provider 未生效：确认配置了 `provider_only`，并配套 `provider_allow_fallbacks = false`。
 - `批量处理 0 个文件`：确认目录下存在 `.srt` 或 `.txt`。
+- 仅重跑失败文件：`kl batch <目录> --retry-from <batch_report.json> ...`
