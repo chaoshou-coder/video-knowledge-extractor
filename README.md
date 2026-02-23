@@ -6,7 +6,11 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-最小投产指南：[`MINIMAL_PROD_GUIDE.md`](./MINIMAL_PROD_GUIDE.md)
+文档导航：
+
+- 快速上手（最小投产）：[`MINIMAL_PROD_GUIDE.md`](./MINIMAL_PROD_GUIDE.md)
+- 详细使用说明：[`USAGE.md`](./USAGE.md)
+- 架构设计说明：[`ARCHITECTURE.md`](./ARCHITECTURE.md)
 
 ---
 
@@ -32,6 +36,12 @@
 
 ```bash
 python -m pip install -e .
+```
+
+如需导出 EPUB/HTML 相关依赖，可安装：
+
+```bash
+python -m pip install -e ".[export]"
 ```
 
 安装后可直接使用：

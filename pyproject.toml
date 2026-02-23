@@ -1,9 +1,14 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "video-knowledge-extractor"
 version = "0.1.0"
 description = "从视频字幕提取结构化知识"
 requires-python = ">=3.10"
 dependencies = [
+    "click>=8.1.0",
     "httpx>=0.26.0",
     "pydantic>=2.0.0",
     "python-frontmatter>=1.0.0",
@@ -17,3 +22,6 @@ full = ["chromadb", "sentence-transformers", "ebooklib", "markdown", "weasyprint
 
 [project.scripts]
 kl = "src.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["src*"]
