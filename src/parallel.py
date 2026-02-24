@@ -47,7 +47,6 @@ class ParallelProcessor:
             discovered = sorted(list(dir_path.glob(pattern)) + list(dir_path.glob("*.txt")))
         else:
             discovered = sorted(files)
-
         self.total_files = len(discovered)
         self.skipped_due_interrupt = 0
         self.interrupted = False

@@ -3,6 +3,9 @@ api_base = "https://openrouter.ai/api/v1"
 api_key = "sk-or-your-api-key"
 model = "google/gemini-2.5-flash-lite"
 timeout = 300
+# 可选：可强制要求模型返回结构化 JSON（如 OpenAI 风格）
+# 也可写成 response_format = "json_object"
+response_format = { type = "json_object" }
 
 # OpenRouter provider 路由（可选）
 # 只允许指定供应商（例如只走 Azure）:
@@ -23,6 +26,10 @@ timeout = 300
 # provider_sort = "throughput"
 
 [processing]
+# chunk_size 控制单次 LLM 处理的文本量（token 近似值）。
+# 对 .srt 字幕文件：值越大，单次处理行数越多，容易出现“目录式”过度概括输出。
+# 建议值：10000~60000。若字幕文件太长建议从 60000 往下调试，
+# 观察 cleaned 文件头部“最终处理分块数”和 structured 质量。
 chunk_size = 60000
 # LLM 调用失败时的最大重试次数（429/5xx/网络错误）
 max_retries = 3

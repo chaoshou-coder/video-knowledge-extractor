@@ -34,6 +34,7 @@ class ModelConfig:
     provider_data_collection: str | None = None
     provider_zdr: bool | None = None
     provider_sort: str | None = None
+    response_format: Mapping[str, Any] | str | None = None
 
     @classmethod
     def from_mapping(cls, data: Mapping[str, Any], section: str = "model") -> "ModelConfig":
@@ -103,6 +104,22 @@ class ModelConfig:
         if provider_sort not in {None, "price", "throughput", "latency"}:
             raise ValueError(f"{section}.provider_sort 仅支持 price/throughput/latency")
 
+        response_format = data.get("response_format")
+        parsed_response_format: Mapping[str, Any] | str | None = None
+        if response_format is not None:
+            if isinstance(response_format, Mapping):
+                parsed_response_format = {
+                    str(key).strip(): value
+                    for key, value in response_format.items()
+                    if str(key).strip()
+                }
+            elif isinstance(response_format, str):
+                normalized = response_format.strip()
+                if normalized:
+                    parsed_response_format = {"type": normalized}
+            else:
+                raise ValueError(f"{section}.response_format 类型不支持，请填写 table 或字符串")
+
         return cls(
             api_base=api_base.rstrip("/"),
             api_key=api_key,
@@ -116,6 +133,7 @@ class ModelConfig:
             provider_data_collection=provider_data_collection,
             provider_zdr=provider_zdr,
             provider_sort=provider_sort,
+            response_format=parsed_response_format,
         )
 
 
@@ -313,6 +331,7 @@ class ProviderRegistry:
             "provider_data_collection": self._provider.config.provider_data_collection,
             "provider_zdr": self._provider.config.provider_zdr,
             "provider_sort": self._provider.config.provider_sort,
+            "response_format": self._provider.config.response_format,
             "chunk_size": self.chunk_size,
             "max_retries": self.max_retries,
             "max_llm_concurrency": self.max_llm_concurrency,

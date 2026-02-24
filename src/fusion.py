@@ -52,10 +52,21 @@ class DuplicateGroup:
 class KnowledgeFusionSkill:
     """知识融合 Skill - 智能去重 + 整合"""
 
-    def __init__(self, llm_client, similarity_threshold: float = 0.75):
+    def __init__(
+        self,
+        llm_client,
+        similarity_threshold: float = 0.7,
+        content_sample_chars: int = 320,
+    ):
         self.llm = llm_client
         self.similarity_threshold = similarity_threshold
-        logger.info(f"初始化 KnowledgeFusionSkill (threshold={similarity_threshold})")
+        self.content_sample_chars = max(120, int(content_sample_chars))
+        self.min_title_similarity = 0.45
+        self.min_content_similarity = 0.3
+        logger.info(
+            "初始化 KnowledgeFusionSkill "
+            f"(threshold={self.similarity_threshold}, content_sample_chars={self.content_sample_chars})"
+        )
 
     async def merge_duplicates(
         self, points: List[KnowledgePoint]
@@ -103,14 +114,18 @@ class KnowledgeFusionSkill:
         使用简单的相似度计算快速找出候选重复组
         """
         n = len(points)
-        similarity_matrix = [[0.0] * n for _ in range(n)]
+        if n < 2:
+            return []
+
+        adjacency: List[List[int]] = [[] for _ in range(n)]
 
         # 计算两两相似度
         for i in range(n):
             for j in range(i + 1, n):
                 sim = self._calculate_similarity(points[i], points[j])
-                similarity_matrix[i][j] = sim
-                similarity_matrix[j][i] = sim
+                if sim >= self.similarity_threshold:
+                    adjacency[i].append(j)
+                    adjacency[j].append(i)
 
         # 基于相似度构建候选组
         visited = [False] * n
@@ -119,18 +134,19 @@ class KnowledgeFusionSkill:
         for i in range(n):
             if visited[i]:
                 continue
-
-            # 找出与 i 相似的点
-            group = [i]
             visited[i] = True
+            queue = [i]
+            group = []
 
-            for j in range(i + 1, n):
-                if (
-                    not visited[j]
-                    and similarity_matrix[i][j] >= self.similarity_threshold
-                ):
-                    group.append(j)
-                    visited[j] = True
+            while queue:
+                cur = queue.pop()
+                if cur in group:
+                    continue
+                group.append(cur)
+                for nxt in sorted(adjacency[cur]):
+                    if not visited[nxt]:
+                        visited[nxt] = True
+                        queue.append(nxt)
 
             if len(group) > 1:
                 groups.append(group)
@@ -140,15 +156,30 @@ class KnowledgeFusionSkill:
     def _calculate_similarity(self, p1: KnowledgePoint, p2: KnowledgePoint) -> float:
         """计算两个知识点的相似度"""
         # 标题相似度（加权更高）
-        title_sim = SequenceMatcher(None, p1.title.lower(), p2.title.lower()).ratio()
+        title_1 = self._normalize_text(p1.title)
+        title_2 = self._normalize_text(p2.title)
+        title_sim = SequenceMatcher(None, title_1, title_2).ratio()
 
-        # 内容相似度（前200字符）
+        if title_sim < self.min_title_similarity:
+            # 标题差异过大，直接降权，避免误合并
+            title_sim = 0.0
+
+        # 内容相似度（取前 N 字符）
         content_sim = SequenceMatcher(
-            None, p1.content[:200].lower(), p2.content[:200].lower()
+            None,
+            self._normalize_text(p1.content)[: self.content_sample_chars],
+            self._normalize_text(p2.content)[: self.content_sample_chars],
         ).ratio()
+        if content_sim < self.min_content_similarity:
+            content_sim = 0.0
 
         # 加权平均
         return title_sim * 0.6 + content_sim * 0.4
+
+    @staticmethod
+    def _normalize_text(text: str) -> str:
+        """统一规范化文本（用于快速相似度计算）"""
+        return re.sub(r"[\s\W_]+", "", str(text).lower())
 
     async def _confirm_duplicates(
         self, points: List[KnowledgePoint], candidate_groups: List[List[int]]

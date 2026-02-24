@@ -105,6 +105,8 @@ def _print_provider_summary(providers: ProviderRegistry) -> None:
         click.echo(f"  - provider_zdr: {info['provider_zdr']}")
     if info.get("provider_sort") is not None:
         click.echo(f"  - provider_sort: {info['provider_sort']}")
+    if info.get("response_format") is not None:
+        click.echo(f"  - response_format: {info['response_format']}")
     click.echo(f"  - max_retries: {info['max_retries']}")
     click.echo(f"  - max_llm_concurrency: {info['max_llm_concurrency']}")
 
@@ -129,14 +131,18 @@ def _load_retry_files(retry_from: Path) -> List[Path]:
     resolved: List[Path] = []
     seen: set[str] = set()
     for item in failed_files:
-        if not isinstance(item, dict):
+        if isinstance(item, str):
+            path_value = item.strip()
+        elif isinstance(item, dict):
+            path_value = str(item.get("path", "")).strip()
+        else:
             continue
-        path_value = str(item.get("path", "")).strip()
         if not path_value:
             continue
         candidate = Path(path_value)
         if not candidate.is_absolute():
-            candidate = (retry_from.parent / candidate).resolve()
+            if not candidate.exists():
+                candidate = (retry_from.parent / candidate).resolve()
         if not candidate.exists():
             continue
         key = str(candidate)
@@ -194,6 +200,9 @@ def _write_batch_report(
         "failed": len(failed_files),
         "skipped": len(skipped_files),
         "interrupted": bool(result.get("interrupted", False)),
+        "total_estimated_time_ranges": int(
+            result.get("total_estimated_time_ranges", 0)
+        ),
         "completed_files": completed_files,
         "failed_files": failed_files,
         "skipped_files": skipped_files,
@@ -229,9 +238,19 @@ async def _run_batch_pipeline(
     click.echo(f"完成: {len(docs)} 个文件")
 
     total_points = sum(len(doc.knowledge_points) for doc in docs)
+    total_estimated_time_ranges = sum(
+        sum(
+            1
+            for point in doc.knowledge_points
+            for item in point.time_ranges
+            if str(item.get("source", "")).strip() == "estimated"
+        )
+        for doc in docs
+    )
     result: Dict[str, object] = {
         "docs": docs,
         "total_points": total_points,
+        "total_estimated_time_ranges": total_estimated_time_ranges,
         "exports": [],
         "interrupted": processor.interrupted,
         "skipped_files": processor.skipped_due_interrupt,
@@ -354,6 +373,9 @@ def _run_process_flow(
     click.echo(f"\n共处理 {processed_chars} 字内容")
     click.echo(f"处理完成: {doc.path}")
     click.echo(f"提取知识点: {len(doc.knowledge_points)} 个，共 {extracted_chars} 字")
+    click.echo(
+        f"估计时间段数: {doc.metadata.get('estimated_time_range_count', 0)}"
+    )
 
     stage_durations = doc.metadata.get("stage_durations", {})
     if isinstance(stage_durations, dict):
@@ -454,6 +476,7 @@ def _run_batch_flow(
         signal.signal(signal.SIGINT, previous_sigint_handler)
 
     click.echo(f"\n总知识点: {result['total_points']} 个")
+    click.echo(f"估计时间段数: {int(result.get('total_estimated_time_ranges', 0))}")
     file_summaries = result.get("file_summaries", [])
     if isinstance(file_summaries, list) and file_summaries:
         click.echo("\n===== 批处理汇总 =====")
@@ -510,7 +533,7 @@ def _wizard(db_path: str) -> None:
         click.prompt("配置文件路径", type=str, default="config.toml")
     )
     enable_video_mark = click.confirm(
-        "是否启用视频标记阶段（会增加一轮 LLM 调用）？",
+        "是否启用视频标记阶段（使用 LLM 结构化结果生成时间段标签）？",
         default=False,
     )
 
@@ -585,7 +608,11 @@ def cli(ctx: click.Context, db: str) -> None:
     help="LLM 配置文件路径",
 )
 @click.option("--mock", is_flag=True, help="模拟模式（不调用外部 API）")
-@click.option("--video-mark", is_flag=True, help="启用视频标记阶段")
+@click.option(
+    "--video-mark",
+    is_flag=True,
+    help="启用视频标记阶段（直接使用结构化时间段，不额外调用 LLM）",
+)
 @click.option(
     "--output",
     "-o",

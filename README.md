@@ -16,6 +16,8 @@
 - [调试与问题排查](docs/DEBUG_AND_TEST_GUIDE.md)
 - [项目贡献说明](docs/CONTRIBUTING.md)
 
+> 推荐阅读顺序：先 `USAGE.md`（确定命令边界），再 `ARCHITECTURE.md`（理解结构化防线），最后 `USAGE.md` 的“排障清单”章节（问题定位）。
+
 ---
 
 ## 这是什么
@@ -41,12 +43,32 @@
 - **可观测处理链路**
   - `process` 单文件执行；`batch` 目录并发执行。
   - SQLite 记录处理状态、阶段耗时与知识点落库。
+- **结构化可控性**
+  - 结构化提示词升级为“角色-契约-反例-样例”框架
+  - 质量门禁 + 低质重试 + 受控 fallback
+  - 降低“空 title / 内容过短 / JSON 解析失败”导致的静默污染
 - **可靠性**
   - 单文件失败不会中断整个批次。
 - **可重跑**
   - 失败文件产出 `batch_report.json`，支持 `--retry-from` 精准重试。
 - **可控性能**
 - LLM 并发阈值、重试次数、chunk size 可配。
+
+### 结构化能力说明（重点）
+
+结构化阶段采用三层防线，确保知识点生成具备可控性与可追溯性：
+
+1. 提示词契约化：固定 JSON 输出契约，要求 `title/content/evidence/time_ranges` 均满足结构与内容约束。  
+2. 质量门禁：对 `title` 非空、文本长度、证据完整性、时间戳映射等维度做校验。  
+3. 异常兜底：弱质量先重试（精提模式），若仍不合格则进入受控 fallback，生成可读标题并记录降级指标。
+
+对应实现位点：
+
+- `src/workflow.py::_build_structure_prompt`：提示词与结构约束  
+- `src/workflow.py::_validate_structure_points`：质量门禁规则  
+- `src/workflow.py::_stage_structure_single_pass`：重试 + fallback 编排  
+- `src/workflow.py::_parse_json_response`：响应解析失败即上抛错误  
+- `src/workflow.py::_build_fallback_points`：受控降级标题与内容生成
 
 ---
 
@@ -89,6 +111,7 @@ api_base = "https://openrouter.ai/api/v1"
 api_key = "sk-or-your-api-key"
 model = "google/gemini-2.5-flash-lite"
 timeout = 300
+response_format = { type = "json_object" }
 
 [processing]
 chunk_size = 60000
@@ -101,8 +124,21 @@ max_llm_concurrency = 8
 - `KL_MODEL_API_KEY`：覆盖 `model.api_key`
 - `KL_APP_URL`：OpenRouter `HTTP-Referer`
 - `KL_APP_NAME`：OpenRouter `X-Title`
+- `response_format`（可选）：强烈建议配置 `json_object`，用于约束结构化输出
+- `response_format` 支持两种写法：
+  - `response_format = { type = "json_object" }`
+  - `response_format = "json_object"`
+
+> `response_format` 是可选项，若模型/网关不支持可直接移除该配置行，主流程仍可运行。
 
 > 安全建议：不要把真实密钥长期提交到仓库，可优先用环境变量注入。
+
+### 推荐运维参数（生产经验）
+
+- `chunk_size`：越大越省 LLM 调用次数，但单 chunk 过长可能增加 `points` 欠拆风险
+- `max_retries`：接口级重试（429/5xx/网络异常）
+- `max_llm_concurrency`：根据 API 配额控制并发
+- 若仍有大量 `fallback`，可先从 `response_format` 入手，再回看 `chunk_size` 与提示词长度
 
 ---
 
@@ -149,6 +185,18 @@ python kl.py batch examples --config config.toml --build --format markdown -o ex
 - `batch`（split 目录）：`<output>/cleaned/`、`<output>/structured/`
 - `--build`：教材文件（markdown/html/epub）
 - `batch` 会额外生成：`<output>/batch_report.json`
+
+结构化指标示例（`python` 直接读取）：
+
+```json
+{
+  "has_timestamps": true,
+  "structure_retry_count": 1,
+  "structure_fallback_count": 0,
+  "structure_weak_chunk_count": 0,
+  "estimated_time_range_count": 3
+}
+```
 
 ---
 

@@ -71,7 +71,7 @@ exports*/
 # Local config
 config.local.yaml
 config.local.json
-config.toml
+config*.toml
 
 # macOS
 .DS_Store

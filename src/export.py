@@ -20,6 +20,25 @@ class TextbookExporter:
             safe_order = str(fallback_index + 1)
         return f"chapter-{safe_order}"
 
+    @staticmethod
+    def _marker_label(marker: Dict, point_title: str = "") -> str:
+        source_file = str(marker.get("source_file", "")).strip()
+        source = str(marker.get("source", "")).strip().lower()
+        source_mark = "（估计）" if source == "estimated" else ""
+        source_label = f"{Path(source_file).name}{source_mark}" if source_file else ""
+        if not source_label:
+            source_label = "视频"
+        detail = str(marker.get("description", "")).strip()
+        if not detail:
+            detail = str(point_title).strip()
+        if len(detail) > 20:
+            detail = detail[:17] + "..."
+        if detail:
+            if source_label:
+                return f"{source_label}：{detail}"
+            return detail
+        return source_label
+
     def export_markdown(
         self,
         course_name: str,
@@ -59,8 +78,13 @@ class TextbookExporter:
                     lines.append("> 📹 **需配合视频学习:**")
                     for marker in point.video_markers:
                         time = marker.get("time", "")
-                        desc = marker.get("description", "")
-                        lines.append(f"> - [{time}] {desc}")
+                        marker_label = self._marker_label(
+                            marker, point_title=point.title
+                        )
+                        if marker_label:
+                            lines.append(f"> - {marker_label} [{time}]")
+                        else:
+                            lines.append(f"> - [{time}]")
                     lines.append("")
 
                 lines.append("")
@@ -123,8 +147,15 @@ class TextbookExporter:
                     content_lines.append('<div class="video-ref">📹 视频参考:</div>')
                     for marker in point.video_markers:
                         time = marker.get("time", "")
-                        desc = marker.get("description", "")
-                        content_lines.append(f"<p>[{time}] {desc}</p>")
+                        marker_label = self._marker_label(
+                            marker, point_title=point.title
+                        )
+                        if marker_label:
+                            content_lines.append(
+                                f"<p>{marker_label} [{time}]</p>"
+                            )
+                        else:
+                            content_lines.append(f"<p>[{time}]</p>")
 
             # 创建章节
             epub_ch = epub.EpubHtml(
@@ -260,8 +291,15 @@ class TextbookExporter:
                     html += "            <strong>需配合视频学习:</strong><br>\n"
                     for marker in point.video_markers:
                         time = marker.get("time", "")
-                        desc = marker.get("description", "")
-                        html += f"            [{time}] {desc}<br>\n"
+                        marker_label = self._marker_label(
+                            marker, point_title=point.title
+                        )
+                        if marker_label:
+                            html += (
+                                f"            {marker_label} [{time}]<br>\n"
+                            )
+                        else:
+                            html += f"            [{time}]<br>\n"
                     html += "        </div>\n"
 
             html += "    </section>\n"
