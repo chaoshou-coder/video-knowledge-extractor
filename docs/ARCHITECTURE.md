@@ -1,143 +1,104 @@
-# 项目架构说明（CLI-only）
+# 技术架构说明（video-knowledge-extractor）
 
-本文档描述 `video-knowledge-extractor` 的运行架构、核心模块职责、数据流和扩展点，帮助你在开发或投产前快速建立整体认知。
+本文件描述 `video-knowledge-extractor` 的模块边界、执行流、持久化与扩展点，目标是让你在不翻代码的情况下先建立全局认知。
 
-## 1. 设计目标
+## 1. 设计边界
 
-- **单入口 CLI**：统一通过命令行运行，避免 GUI/Web 分支带来的复杂度。
-- **可自动化**：参数化命令适配脚本、CI、Agent 调用。
-- **可观测**：使用 SQLite 追踪处理状态与知识点结果。
-- **可重试**：LLM 调用支持可配置重试。
-- **可审计**：批处理生成 `batch_report.json`，便于复盘和重跑失败文件。
+- 职能边界
+  - 提供 CLI 与 Wizard 两种交互入口，默认不提供 Web/API。
+  - 输入限定为字幕文本文件（`.srt` 或 `.txt`），不负责语音转写。
+  - 聚焦“从字幕到知识输出产物”的生产化流水线。
+- 非功能目标
+  - 批量运行稳定、可重试、可复盘。
+  - 输出 Markdown/HTML/EPUB 与课堂学习标记。
+  - 支持 mock 与真实模型并行回归。
 
-## 2. 运行视图
-
-系统只有两条主路径：
-
-1. `process`：单文件处理（清洗 + 结构化，可选视频标记）
-2. `batch`：目录并行处理；可选执行“融合 + 聚类 + 导出教材”
-
-调用链路（简化）：
+## 2. 运行模型（Single Pass + Batch）
 
 ```text
-kl / python kl.py
-  -> src.cli
-    -> _build_runtime()
-      -> ProviderRegistry or MockLLMClient
-      -> WorkflowEngine
-    -> process / batch / status / parse
+CLI (python kl.py / kl)
+    └─ src/cli.py
+        ├─ 参数与子命令解析
+        ├─ 运行时构建（LLM 客户端 + WorkflowEngine）
+        ├─ 进度与重试上下文（SQLite）
+        └─ 选择执行路径
+            ├─ process（单文件）
+            └─ batch（目录）
+                 ├─ 并发调度（parallel.py）
+                 ├─ process_document（workflow.py）
+                 ├─ batch_report 汇总
+                 ├─ build（可选）
+                 │   ├─ 融合（fusion.py）
+                 │   ├─ 聚类（clustering.py）
+                 │   └─ 导出（export.py）
+                 └─ 输出文件与报告
 ```
 
 ## 3. 模块职责
 
 - `kl.py`
-  - 轻量入口脚本，直接调用 `src.cli:main`。
+  - 项目脚本入口，转发到 `src.cli:main`，确保 `python kl.py` 与 `kl` 统一入口行为。
 - `src/cli.py`
-  - 命令定义与参数解析（Click）。
-  - 组织 `process`、`batch`、`status`、`parse` 与 Wizard 交互。
-  - 负责批处理报告写入与 `--retry-from` 失败重跑。
+  - `process / batch / status / parse` 四类命令与通用参数解析。
+  - 加载配置并组装运行时（TextGenerator + WorkflowEngine）。
+  - 管理批次报告落盘与 `--retry-from` 解析。
 - `src/workflow.py`
-  - 核心流水线：规则清理、语义分段、子切分、降噪、结构化提取、可选视频标记。
-  - 以“阶段完成/失败”为粒度输出日志时间线。
-  - 关键阶段失败会抛出文件级异常（不再静默生成低质量兜底内容）。
-  - `ProgressTracker` 负责 SQLite 写入和状态追踪。
+  - 核心流水线引擎。
+  - 阶段：
+    - `rule_cleaning` 规则清洗
+    - `sub_chunking` 上下文切块
+    - `noise_reduction` （降噪清洗）
+    - `structuring`（知识点抽取）
+    - `video_marking`（可选时间戳标记）
+  - 通过 `ProgressTracker` 写入/更新 `knowledge.db`。
 - `src/llm_provider.py`
-  - 加载 `config.toml`。
-  - 构造统一异步 LLM 客户端（OpenAI Chat Completions 兼容接口）。
-  - 长生命周期 `httpx.AsyncClient` 连接池复用。
-  - 全局并发闸门（`max_llm_concurrency`）与可配置重试（`max_retries`）。
-  - 支持 OpenRouter provider 路由参数与环境变量覆盖。
+  - 统一构造异步 LLM 客户端，兼容 OpenAI Chat Completions 风格接口。
+  - 处理 `model` 与 `processing` 配置，统一重试、超时与并发闸门。
+  - 提供 `MockLLMClient`，支持离线回归。
 - `src/parallel.py`
-  - 批处理并行器（文件级并发）。
-  - 收集文件级成功/失败摘要，供批次汇总与报告输出。
+  - 文件级并发调度器，限制 worker 数，失败隔离并汇总结果。
 - `src/fusion.py`
-  - 跨文档知识点去重与融合，生成章节衔接段落。
+  - 跨文档知识点去重与融合。
 - `src/clustering.py`
-  - 对融合后的知识点做主题聚类与课程结构构建。
-  - 在章节分配阶段提供未匹配知识点回填策略，减少空章节。
+  - 知识点主题聚类与课程章节构建。
 - `src/export.py`
-  - 导出 Markdown / HTML / EPUB。
-  - Markdown/HTML 目录支持锚点超链接直达章节。
+  - 输出 Markdown/HTML/EPUB，负责目录与内容拼装。
 - `src/srt_parser.py`
-  - 解析标准 SRT 与时间戳 TXT。
+  - 解析 SRT/时间戳 TXT，保留时间索引供视频映射。
+- `src/workflow_monitor.py`
+  - 实验性日志监控模块，当前非主路径硬依赖。
 
-## 4. 核心数据对象
+## 4. 状态与数据持久化
 
-定义位于 `src/workflow.py`：
+- SQLite 文件：`knowledge.db`（默认）  
+  - `documents`: 文件状态、当前阶段、错误码/错误信息、时间记录。
+  - `knowledge_points`: 每条知识点文本与来源文件上下文。
+- 文件产物
+  - `process`：`<output>/<stem>_cleaned.md`、`<output>/<stem>_structured.md`
+  - `batch`：`<output>/cleaned/`、`<output>/structured/`
+  - `--build`：课程文本（markdown/html/epub）
+  - `batch_report.json`：本次批次成功/失败/跳过明细
 
-- `Document`
-  - 单个输入文件的处理单元，包含 `content`、`knowledge_points`、`metadata`。
-- `KnowledgePoint`
-  - 结构化知识点：`title`、`content`、`video_markers`、`source_file`。
-- `SemanticSegment`
-  - 语义分段结果（起止行、标题、内容）。
-- `TextChunk`
-  - 最终送入后续阶段的处理分块。
+## 5. 错误处理与重试
 
-## 5. 流水线分阶段说明
+- 文件级失败不阻断整批。
+- 失败写入 `batch_report.json`，用于后续精准重跑。
+- 重试文件解析时兼容：
+  - `failed_files` 为字符串路径；
+  - `failed_files` 为对象，使用 `{"path": ...}`。
+- 路径解析策略：优先按当前运行环境解析，再回退到 report 所在目录。
 
-`WorkflowEngine.process_document()` 的主阶段：
+## 6. 并发策略
 
-1. **rule_cleaning**：规则清理（正则去噪，无 LLM）
-2. **semantic_segmentation**：LLM 通读并按行号语义分段
-3. **sub_chunking**：按 `chunk_size` 做子切分，避免上下文超限
-4. **noise_reduction**：对分块进行 LLM 清洗降噪
-5. **structuring**：LLM 结构化提取知识点
-6. **video_marking（可选）**：补充“需看视频画面”标记
+- `batch --workers` 控制并发文件数。
+- `max_llm_concurrency` 控制全局 LLM 请求并发上限。
+- `max_retries` 控制可用重试次数（429/5xx 等场景）。
+- 建议在生产端先从保守并发开始，再按模型限流与CPU/内存曲线递增。
 
-每个阶段都记录耗时，写入 `doc.metadata["stage_durations"]`，并同步更新 SQLite 状态。
+## 7. 扩展路线
 
-## 6. 存储与输出
+- 更换模型厂商：实现兼容同一 `generate` 协议的客户端并通过 `model` 配置路由。
+- 新增导出格式：在 `export.py` 新增 formatter 并扩展 CLI `--format` 约束。
+- 强化观测性：将阶段耗时、失败码、重试次数纳入日志告警。
+- 改造重试策略：按错误类型（速率限制 / 内容异常 / 提示词异常）分级处理。
 
-### 6.1 SQLite（默认 `knowledge.db`）
-
-- `documents`
-  - 跟踪文档状态：`pending/processing/done` 与当前 `stage`。
-- `knowledge_points`
-  - 存储每个文档提取出的知识点与视频标记。
-
-### 6.2 文件输出
-
-- `process` 模式：
-  - `<output>/<stem>_cleaned.md`
-  - `<output>/<stem>_structured.md`
-- `batch` 模式（split 目录）：
-  - `<output>/cleaned/`
-  - `<output>/structured/`
-- `--build` 额外输出：
-  - 教材文件：Markdown / HTML / EPUB（取决于 `--format`）
-- 批处理附加报告：
-  - `<output>/batch_report.json`
-  - 包含成功/失败/跳过文件列表与错误信息
-
-## 7. 配置系统
-
-配置文件默认 `config.toml`：
-
-- `[model]`
-  - `api_base`、`api_key`、`model`、`timeout`
-  - OpenRouter 扩展项（`provider_only` 等）
-- `[processing]`
-  - `chunk_size`
-  - `max_retries`
-  - `max_llm_concurrency`
-
-环境变量覆盖：
-
-- `KL_MODEL_API_KEY`：覆盖配置中的 `api_key`
-- `KL_APP_URL`、`KL_APP_NAME`：OpenRouter 请求头
-
-## 8. 错误处理策略
-
-- LLM 网络抖动：按配置重试（默认 3 次）。
-- 文件级失败：失败文件写入报告，批处理继续处理其他文件。
-- 失败重跑：`kl batch ... --retry-from <batch_report.json>` 仅重跑失败文件。
-- JSON 解析失败：尝试多种提取策略（代码块/裸 JSON/大括号截取）。
-- 章节分配异常：触发未匹配知识点回填，避免导出空壳目录。
-
-## 9. 扩展建议
-
-- **替换 LLM 后端**：实现 `TextGenerator` 协议（`generate()`）并注入 `WorkflowEngine`。
-- **新增导出格式**：在 `TextbookExporter` 中添加导出方法并在 CLI 暴露选项。
-- **优化并行策略**：调整 `batch --workers`，并按模型吞吐控制并发。
-- **增强质量门禁**：在 CI 中补充更多 CLI 冒烟案例与输出校验。
